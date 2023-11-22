@@ -26,5 +26,14 @@ public class User
         _password = newPassword;
     }
 
+    public void SetBalance(decimal balance)
+    {
+        _balance = balance;
+    }
+
+    public decimal GetBalance()
+    {
+        return _balance;
+    }
     
 }
