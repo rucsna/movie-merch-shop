@@ -21,5 +21,10 @@ public class User
         _wishList = new List<MerchItem>();
     }
 
+    public void SetPassword(string newPassword)
+    {
+        _password = newPassword;
+    }
+
     
 }
