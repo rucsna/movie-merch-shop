@@ -36,4 +36,14 @@ public class User
         return _balance;
     }
     
+    public void AddOrder(Order order)
+    {
+        _orders.Add(order);
+    }
+
+    public IEnumerable<Order> GetOrders()
+    {
+        return _orders;
+    }
+    
 }
