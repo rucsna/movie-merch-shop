@@ -35,7 +35,7 @@ public class User
     {
         return _balance;
     }
-    
+
     public void AddOrder(Order order)
     {
         _orders.Add(order);
@@ -45,5 +45,14 @@ public class User
     {
         return _orders;
     }
-    
+
+    public void AddMerchItem(MerchItem merchItem)
+    {
+        _wishList.Add(merchItem);
+    }
+
+    public IEnumerable<MerchItem> GetMerchItems()
+    {
+        return _wishList;
+    }
 }
