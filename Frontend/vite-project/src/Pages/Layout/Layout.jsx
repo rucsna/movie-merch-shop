@@ -1,3 +1,4 @@
+import React from "react";
 import { Outlet, Link } from "react-router-dom";
 
 import "./Layout.css";
@@ -7,18 +8,8 @@ const Layout = () => (
     <nav>
       <ul>
         <li className="grow">
-          <Link to="/">Employees</Link>
+          <Link to="/">Movie Merch Shop</Link>
         </li>
-       {/*  <li>
-          <Link to="/create">
-            <button type="button">Create Employee</button>
-          </Link>
-        </li>
-        <li>
-          <Link to="/equipment">
-            <button type="button">Create Equipment</button>
-          </Link>
-        </li> */}
       </ul>
     </nav>
     <Outlet />

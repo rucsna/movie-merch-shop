@@ -1,23 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import './index.css'
 
 
-import Layout from './Pages/Layout/Layout.jsx'
+import Layout from './Pages/Layout'
 
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
-    errorElement: <ErrorPage />,
+    // errorElement: <ErrorPage />,
     children: [
-      {
+     /*  {
         path: "/products",
-        element: <Landing />,
-      },
-      {
+        element: <Layout />,
+      }, */
+     /*  {
         path: "/:movieId/products",
         element: <ProductsByMovie />,
       },
@@ -40,12 +41,13 @@ const router = createBrowserRouter([
       {
         path: "/registration",
         element: <Registration />,
-      },
+      }, */
     ],
   },
 ]);
-ReactDOM.createRoot(document.getElementById('root')).render(
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);
