@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, Link } from "react-router-dom";
-import mmwLogo from "../../Pictures/MMWlogo.png";
+import mmwLogo from "../../assets/MMWlogo.png";
 import "./Layout.css";
 
 const Layout = () => (
@@ -29,7 +29,7 @@ const Layout = () => (
       <input type="text" placeholder="Search products..." />
       <button>Search</button>
     </div>
-
+    <Outlet />
   </div>
 );
 

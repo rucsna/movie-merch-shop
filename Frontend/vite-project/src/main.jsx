@@ -7,6 +7,7 @@ import './index.css'
 
 import Layout from './Pages/Layout';
 import ErrorPage from "./Pages/ErrorPage";
+import Products from './Pages/Products';
 
 const router = createBrowserRouter([
   {
@@ -14,10 +15,10 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-     /*  {
+       {
         path: "/products",
-        element: <Layout />,
-      }, */
+        element: <Products />,
+      },
      /*  {
         path: "/:movieId/products",
         element: <ProductsByMovie />,
