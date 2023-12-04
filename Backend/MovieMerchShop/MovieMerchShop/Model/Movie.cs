@@ -12,7 +12,7 @@ namespace MovieMerchShop.Model
         public string Plot { get; set; }
         private ICollection<string> _actors;
         private ICollection<string> _genres;
-        private ICollection<MerchItem> _merches;
+        private ICollection<MerchItem> _merch;
         
 
         public Movie(int year, string title)
@@ -21,7 +21,7 @@ namespace MovieMerchShop.Model
             Year = year;
             Id = Guid.NewGuid();
             _actors = new List<string>();
-            _merches = new List<MerchItem>();
+            _merch = new List<MerchItem>();
             _genres = new List<string>();
         }
         
@@ -47,12 +47,12 @@ namespace MovieMerchShop.Model
         
         public void AddMerchItem(MerchItem merchItem)
         {
-            _merches.Add(merchItem);
+            _merch.Add(merchItem);
         }
 
         public IEnumerable<MerchItem> GetMerchItems()
         {
-            return _merches;
+            return _merch;
         }
     }
 }

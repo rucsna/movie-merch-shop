@@ -8,6 +8,7 @@ public class User
     private string _password;
     private string _address;
     private decimal _balance;
+    private ICollection<MerchItem> _cart;
     private readonly ICollection<Order> _orders;
     private readonly ICollection<MerchItem> _wishList;
 
@@ -19,6 +20,7 @@ public class User
         _password = password;
         _address = address;
         _balance = 0;
+        _cart = new List<MerchItem>();
         _orders = new List<Order>();
         _wishList = new List<MerchItem>();
     }
