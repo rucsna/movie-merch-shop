@@ -1,9 +1,13 @@
 ﻿namespace MovieMerchShop.Model;
 
-public abstract class MerchItem
+public class MerchItem
 {
-    public Guid Id { get; }
+    public Guid Id { get; set; }
     public decimal Price { get; set; }
     public Guid MovieId { get; }
     public uint Quantity { get; set; }
+
+    public MerchItem()
+    {
+    }
 }
