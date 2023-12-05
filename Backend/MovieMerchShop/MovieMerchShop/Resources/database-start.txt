@@ -1,0 +1,14 @@
+msql: docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Codecool_2023" -p 1433:1433 -d mcr.microsoft.com/mssql/server
+
+Azur: 
+server - localhost
+username: SA
+pw: Codecool_2023
+trust server - True
+Name - MovieMerchShop
+
+(dotnet tool install --global dotnet-ef --version 7.0.0) - hogy működjön az ef parancs
+
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+
