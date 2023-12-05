@@ -5,7 +5,7 @@ namespace MovieMerchShop.Model
 {
     public class Movie
     {
-        public Guid Id { get; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public int Year { get; init; }
         public string PosterLink { get; set; }
@@ -13,7 +13,10 @@ namespace MovieMerchShop.Model
         private ICollection<string> _actors;
         private ICollection<string> _genres;
         private ICollection<MerchItem> _merch;
-        
+
+        public Movie()
+        {
+        }
 
         public Movie(int year, string title)
         {

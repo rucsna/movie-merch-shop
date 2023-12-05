@@ -2,7 +2,7 @@
 
 public class User
 {
-    public Guid Id { get; set; }
+    public Guid UserId { get; set; }
     public string UserName { get; set; }
     public DateTime BirthDate { get; set; }
     private string _password;
@@ -12,9 +12,12 @@ public class User
     private readonly ICollection<Order> _orders;
     private readonly ICollection<MerchItem> _wishList;
 
+    public User()
+    {
+    }
     public User(string userName, DateTime birthDate, string password, string address)
     {
-        Id = Guid.NewGuid();
+        UserId = Guid.NewGuid();
         UserName = userName;
         BirthDate = birthDate;
         _password = password;
