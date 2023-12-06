@@ -16,16 +16,19 @@ public class UserController : ControllerBase
     }
     
     [HttpPost]
-    public ActionResult<User> AddUser(User newUser)
+    public IActionResult AddNewUser(User newUser)
     {
-        if (newUser == null)
+        try
         {
-            BadRequest();
+            _dbContext.Users.Add(newUser);
+            _dbContext.SaveChanges();
+            return CreatedAtAction(nameof(AddNewUser), new { id = newUser.UserId }, newUser);
+  
         }
-        
-        _dbContext.Users.Add(newUser);
-        _dbContext.SaveChanges();
-        return CreatedAtAction(nameof(AddUser), new { id = newUser.UserId }, newUser);
+        catch (Exception e)
+        {
+            return BadRequest(e);
+        } 
     }
 
     [HttpGet("/{userId}")]
@@ -41,7 +44,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("/{userId")]
+    [HttpDelete("/{userId}")]
     public ActionResult<User> DeleteUser(Guid userId)
     {
         var userToDelete = _dbContext.Users.FirstOrDefault(user => user.UserId == userId);
@@ -56,4 +59,6 @@ public class UserController : ControllerBase
 
         return Ok($"User with id {userId} has been deleted.");
     }
+
+    
 }
