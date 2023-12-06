@@ -32,7 +32,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("/{userId}")]
-    public ActionResult<User> GetUserById(Guid userId)
+    public IActionResult GetUserById(Guid userId)
     {
         var user = _dbContext.Users.Find(userId);
 
@@ -45,7 +45,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("/{userId}")]
-    public ActionResult<User> DeleteUser(Guid userId)
+    public IActionResult DeleteUser(Guid userId)
     {
         var userToDelete = _dbContext.Users.FirstOrDefault(user => user.UserId == userId);
 
@@ -60,5 +60,19 @@ public class UserController : ControllerBase
         return Ok($"User with id {userId} has been deleted.");
     }
 
-    
+    [HttpPut("/{userId}")]
+    public IActionResult UpdateUser(Guid userId, string userName, DateTime birthdate)
+    {
+        var userToUpdate = _dbContext.Users.FirstOrDefault(originalUser => originalUser.UserId == userId);
+        if (userToUpdate != null)
+        {
+            userToUpdate.UserName = userName;
+            userToUpdate.BirthDate = birthdate;
+            _dbContext.Users.Update(userToUpdate);
+            _dbContext.SaveChanges();
+            return Ok($"User with id {userId} has been updated.");
+        }
+
+        return NotFound();
+    }
 }
