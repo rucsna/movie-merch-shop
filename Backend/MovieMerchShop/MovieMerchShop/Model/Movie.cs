@@ -10,8 +10,8 @@ namespace MovieMerchShop.Model
         public string Year { get; init; }
         public string Poster { get; set; }
         public string Plot { get; set; }
+        public List<MovieGenre> MovieGenres { get; } = new();
         public ICollection<string> _actors;
-        public ICollection<string> _genres;
         public ICollection<MerchItem> _merch;
 
         public Movie()
@@ -25,7 +25,7 @@ namespace MovieMerchShop.Model
             Id = Guid.NewGuid();
             _actors = new List<string>();
             _merch = new List<MerchItem>();
-            _genres = new List<string>();
+            //Genres = new List<MovieGenre>();
         }
         
         public void AddActor(string actor)
@@ -38,15 +38,15 @@ namespace MovieMerchShop.Model
             return _actors;
         }
         
-        public void AddGenre(string genre)
-        {
-            _genres.Add(genre);
-        }
-
-        public IEnumerable<string> GetGenres()
-        {
-            return _genres;
-        }
+        // public void AddGenre(Genre genre)
+        // {
+        //     Genres.Add(genre);
+        // }
+        //
+        // public IEnumerable<Genre> GetGenres()
+        // {
+        //     return Genres;
+        // }
         
         public void AddMerchItem(MerchItem merchItem)
         {
