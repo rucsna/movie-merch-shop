@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using MovieMerchShop.Model;
 using MovieMerchShop.Service;
@@ -22,6 +23,40 @@ public class MerchItemController : ControllerBase
         return Ok(items);
     }
     
+    [HttpGet("/{id}")]
+    public IActionResult GetItemById(Guid id)
+    {
+        try
+        {
+            var user = _dbContext.Users.Find(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e);
+        }
+    }
+
+    [HttpGet("/ItemsByMovie/{movieId}")]
+    public IActionResult GetItemsByMovie([Required]Guid movieId)
+    {
+        try
+        {
+            var items = _dbContext.MerchItems.Select(item => item.MovieId == movieId).ToList();
+            return Ok(items);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e);
+        }
+    }
+    
     [HttpPost]
     public IActionResult AddNewItem(MerchItem newItem)
     {
@@ -36,8 +71,8 @@ public class MerchItemController : ControllerBase
             return BadRequest(e);
         }
     }
+
     
-    // get item by id
     // get all by movieId
     // get all by userId (/ order?)
 }
