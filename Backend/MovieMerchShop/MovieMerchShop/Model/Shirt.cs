@@ -6,4 +6,8 @@ public class Shirt:MerchItem
 {
     public Size Size { get; }
     public Color Color { get; }
+
+    public Shirt()
+    {
+    }
 }

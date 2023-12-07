@@ -6,4 +6,8 @@ public class Poster:MerchItem
 {
     public Size Size { get; }
     public Material Material { get; }
+
+    public Poster()
+    {
+    }
 }
