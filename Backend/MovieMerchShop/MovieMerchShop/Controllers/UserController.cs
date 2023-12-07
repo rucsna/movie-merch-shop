@@ -41,7 +41,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("/{userId")]
+    [HttpDelete("/{userId}")]
     public ActionResult<User> DeleteUser(Guid userId)
     {
         var userToDelete = _dbContext.Users.FirstOrDefault(user => user.UserId == userId);
