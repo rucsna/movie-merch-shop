@@ -7,18 +7,18 @@ namespace MovieMerchShop.Model
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public int Year { get; init; }
-        public string PosterLink { get; set; }
+        public string Year { get; init; }
+        public string Poster { get; set; }
         public string Plot { get; set; }
-        private ICollection<string> _actors;
-        private ICollection<string> _genres;
-        private ICollection<MerchItem> _merch;
+        public ICollection<string> _actors;
+        public ICollection<string> _genres;
+        public ICollection<MerchItem> _merch;
 
         public Movie()
         {
         }
 
-        public Movie(int year, string title)
+        public Movie(string year, string title)
         {
             Title = title;
             Year = year;
