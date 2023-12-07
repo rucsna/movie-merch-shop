@@ -14,8 +14,8 @@ public class AppDbContext : DbContext
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Mug>().HasBaseType<MerchItem>();
-    }
+    // protected override void OnModelCreating(ModelBuilder modelBuilder)
+    // {
+    //     modelBuilder.Entity<Mug>().HasBaseType<MerchItem>();
+    // }
 }
