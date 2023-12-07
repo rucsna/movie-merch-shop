@@ -652,4 +652,6 @@ fabric.properties
 .idea/.idea.MovieMerchShop/.idea/workspace.xml
 .idea/
 
+
+.Migrations/
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio
