@@ -14,12 +14,15 @@ namespace MovieMerchShop.Controllers
         private readonly IOmdbApiProvider _omdbApiProvider;
         private readonly IJsonProcessorOmdbApi _jsonProcessor;
         private ILogger<MovieController> _logger;
+        private readonly AppDbContext _context;
         private static readonly Dictionary<string, List<string>> UserFavoriteMovies =
             new Dictionary<string, List<string>>();
 
 
-        public MovieController(IOmdbApiProvider omdbApiProvider,IJsonProcessorOmdbApi jsonProcessorOmdbApi, ILogger<MovieController> logger)
-        {
+        public MovieController(AppDbContext context,IOmdbApiProvider omdbApiProvider,IJsonProcessorOmdbApi jsonProcessorOmdbApi, ILogger<MovieController> logger)
+        
+            {
+                _context = context;
             //_httpClientFactory = httpClientFactory;
             _omdbApiKey = "YourOMDBApiKey";
             _omdbApiProvider = omdbApiProvider;
@@ -130,6 +133,18 @@ namespace MovieMerchShop.Controllers
             {
                 return NotFound($"{username} does not have any favorite movies.");
             }
+        }
+        
+        [HttpGet("GetMoviesByTitle/{title}")]
+        public IActionResult GetMoviesByTitle(string title)
+        {
+            var movies = _context.Movies.Where(movie => movie.Title.Contains(title)).ToList();
+            if (movies ==null || movies.Count ==0)
+            {
+                return NotFound();
+            }
+
+            return Ok(movies);
         }
     }
 }
