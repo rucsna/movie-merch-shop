@@ -9,6 +9,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IOmdbApiProvider, OmdbApi>();
+builder.Services.AddScoped<IJsonProcessorOmdbApi, JsonProcessorOmdbApi>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
