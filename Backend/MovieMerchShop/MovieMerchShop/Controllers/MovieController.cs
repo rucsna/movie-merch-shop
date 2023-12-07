@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MovieMerchShop.Model;
 using MovieMerchShop.Service;
 
 namespace MovieMerchShop.Controllers
@@ -14,17 +15,19 @@ namespace MovieMerchShop.Controllers
         private readonly IOmdbApiProvider _omdbApiProvider;
         private readonly IJsonProcessorOmdbApi _jsonProcessor;
         private ILogger<MovieController> _logger;
+        private readonly AppDbContext _context;
         private static readonly Dictionary<string, List<string>> UserFavoriteMovies =
             new Dictionary<string, List<string>>();
 
 
-        public MovieController(IOmdbApiProvider omdbApiProvider,IJsonProcessorOmdbApi jsonProcessorOmdbApi, ILogger<MovieController> logger)
+        public MovieController(AppDbContext context,IOmdbApiProvider omdbApiProvider,IJsonProcessorOmdbApi jsonProcessorOmdbApi, ILogger<MovieController> logger)
         {
             //_httpClientFactory = httpClientFactory;
             _omdbApiKey = "YourOMDBApiKey";
             _omdbApiProvider = omdbApiProvider;
             _logger = logger;
             _jsonProcessor = jsonProcessorOmdbApi;
+            _context = context;
         }
 
         // [HttpGet("search")]
@@ -56,6 +59,22 @@ namespace MovieMerchShop.Controllers
         //     }
         // }
 
+        [HttpGet("GetMoviesByTitle/{title}")]
+        public ActionResult<IEnumerable<Movie>> GetOrderById(string title)
+        {
+            var movies = _context.Movies
+                .Where(movie => movie.Title.Contains(title))
+                .ToList();
+
+            if (movies == null || movies.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(movies);
+        }
+
+        
         [HttpGet("filldata")]
         public async Task<IActionResult> MoviesDataFromApi()
         {

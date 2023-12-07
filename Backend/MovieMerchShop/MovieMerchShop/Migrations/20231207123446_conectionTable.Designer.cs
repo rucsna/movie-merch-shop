@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieMerchShop.Service;
 
@@ -11,9 +12,11 @@ using MovieMerchShop.Service;
 namespace MovieMerchShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231207123446_conectionTable")]
+    partial class conectionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,7 +35,12 @@ namespace MovieMerchShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("MovieId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
 
                     b.ToTable("Genres");
                 });
@@ -86,33 +94,6 @@ namespace MovieMerchShop.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("MovieMerchShop.Model.MovieGenre", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("GenreId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("MovieId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GenreId1");
-
-                    b.HasIndex("MovieId1");
-
-                    b.ToTable("MovieGenres");
-                });
-
             modelBuilder.Entity("MovieMerchShop.Model.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -148,6 +129,13 @@ namespace MovieMerchShop.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MovieMerchShop.Model.Genre", b =>
+                {
+                    b.HasOne("MovieMerchShop.Model.Movie", null)
+                        .WithMany("Genres")
+                        .HasForeignKey("MovieId");
+                });
+
             modelBuilder.Entity("MovieMerchShop.Model.MerchItem", b =>
                 {
                     b.HasOne("MovieMerchShop.Model.Order", null)
@@ -155,33 +143,9 @@ namespace MovieMerchShop.Migrations
                         .HasForeignKey("OrderId");
                 });
 
-            modelBuilder.Entity("MovieMerchShop.Model.MovieGenre", b =>
-                {
-                    b.HasOne("MovieMerchShop.Model.Genre", "Genre")
-                        .WithMany("MovieGenres")
-                        .HasForeignKey("GenreId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MovieMerchShop.Model.Movie", "Movie")
-                        .WithMany("MovieGenres")
-                        .HasForeignKey("MovieId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Genre");
-
-                    b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("MovieMerchShop.Model.Genre", b =>
-                {
-                    b.Navigation("MovieGenres");
-                });
-
             modelBuilder.Entity("MovieMerchShop.Model.Movie", b =>
                 {
-                    b.Navigation("MovieGenres");
+                    b.Navigation("Genres");
                 });
 
             modelBuilder.Entity("MovieMerchShop.Model.Order", b =>
