@@ -26,12 +26,23 @@ public class JsonProcessorOmdbApi:IJsonProcessorOmdbApi
             {
             string title = moviesDataElement.GetString();
             Console.WriteLine(title);
-            Movie movie = await _omdbApiProvider.GetMovieByTitle(title);
+            var result = await _omdbApiProvider.GetMovieByTitle(title);
+            Movie movie = result.Movie;
             
             if (movie != null)
             {
                 _dbContext.Movies.Add(movie);
+                await _dbContext.SaveChangesAsync();
+
             }
+            foreach (var genreName in result.Genres)
+            {
+                var genre = _dbContext.Genres.FirstOrDefault(g => g.GenreName == genreName) ?? new Genre { GenreName = genreName };
+                var movieGenre = new MovieGenre { Movie = movie, Genre = genre };
+
+                _dbContext.MovieGenres.Add(movieGenre);
+            }
+
             }
             catch (Exception ex)
             {
