@@ -4,5 +4,5 @@ namespace MovieMerchShop.Service;
 
 public interface IOmdbApiProvider
 {
-    Task<Movie> GetMovieByTitle(string title);
+    Task<ApiResult> GetMovieByTitle(string title);
 }
