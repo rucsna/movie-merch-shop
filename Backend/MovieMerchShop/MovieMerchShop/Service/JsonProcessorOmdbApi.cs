@@ -32,7 +32,6 @@ public class JsonProcessorOmdbApi:IJsonProcessorOmdbApi
             if (movie != null)
             {
                 _dbContext.Movies.Add(movie);
-                await _dbContext.SaveChangesAsync();
 
             }
             foreach (var genreName in result.Genres)
@@ -42,6 +41,7 @@ public class JsonProcessorOmdbApi:IJsonProcessorOmdbApi
 
                 _dbContext.MovieGenres.Add(movieGenre);
             }
+                await _dbContext.SaveChangesAsync();
 
             }
             catch (Exception ex)
@@ -49,7 +49,7 @@ public class JsonProcessorOmdbApi:IJsonProcessorOmdbApi
                 _logger.LogError($"Error processing movie: {ex.Message}");
             }
         }
-        await _dbContext.SaveChangesAsync();
+      
         _logger.LogInformation("Movies saved to the database successfully.");
     }
 }

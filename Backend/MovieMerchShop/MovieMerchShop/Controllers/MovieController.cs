@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MovieMerchShop.Model;
 using MovieMerchShop.Service;
 
 namespace MovieMerchShop.Controllers
@@ -20,14 +21,15 @@ namespace MovieMerchShop.Controllers
 
 
         public MovieController(AppDbContext context,IOmdbApiProvider omdbApiProvider,IJsonProcessorOmdbApi jsonProcessorOmdbApi, ILogger<MovieController> logger)
-        
-            {
-                _context = context;
+
+        {
+
             //_httpClientFactory = httpClientFactory;
             _omdbApiKey = "YourOMDBApiKey";
             _omdbApiProvider = omdbApiProvider;
             _logger = logger;
             _jsonProcessor = jsonProcessorOmdbApi;
+            _context = context;
         }
 
         // [HttpGet("search")]
@@ -59,6 +61,22 @@ namespace MovieMerchShop.Controllers
         //     }
         // }
 
+        [HttpGet("GetMoviesByTitle/{title}")]
+        public ActionResult<IEnumerable<Movie>> GetOrderById(string title)
+        {
+            var movies = _context.Movies
+                .Where(movie => movie.Title.Contains(title))
+                .ToList();
+
+            if (movies == null || movies.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(movies);
+        }
+
+        
         [HttpGet("filldata")]
         public async Task<IActionResult> MoviesDataFromApi()
         {

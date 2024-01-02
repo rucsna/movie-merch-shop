@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieMerchShop.Service;
 
@@ -11,9 +12,11 @@ using MovieMerchShop.Service;
 namespace MovieMerchShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231207151319_Table")]
+    partial class Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,13 +161,13 @@ namespace MovieMerchShop.Migrations
             modelBuilder.Entity("MovieMerchShop.Model.MovieGenre", b =>
                 {
                     b.HasOne("MovieMerchShop.Model.Genre", "Genre")
-                        .WithMany("MovieGenres")
+                        .WithMany("Genres")
                         .HasForeignKey("GenreId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MovieMerchShop.Model.Movie", "Movie")
-                        .WithMany("MovieGenres")
+                        .WithMany("Genres")
                         .HasForeignKey("MovieId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -176,12 +179,12 @@ namespace MovieMerchShop.Migrations
 
             modelBuilder.Entity("MovieMerchShop.Model.Genre", b =>
                 {
-                    b.Navigation("MovieGenres");
+                    b.Navigation("Genres");
                 });
 
             modelBuilder.Entity("MovieMerchShop.Model.Movie", b =>
                 {
-                    b.Navigation("MovieGenres");
+                    b.Navigation("Genres");
                 });
 
             modelBuilder.Entity("MovieMerchShop.Model.Order", b =>

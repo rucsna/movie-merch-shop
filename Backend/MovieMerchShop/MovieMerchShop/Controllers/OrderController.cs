@@ -24,7 +24,7 @@ public class OrderController: ControllerBase
     }
     
     [HttpGet("GetOrderById/{id}")]
-    public ActionResult<Order> GetOrderById(int id)
+    public ActionResult<Order> GetOrderById(Guid id)
     {
         var order = _context.Orders.Find(id);
 
