@@ -23,7 +23,7 @@ public class MerchItemController : ControllerBase
         return Ok(items);
     }
     
-    [HttpGet("/{id}")]
+    [HttpGet("{id}")]
     public IActionResult GetItemById(Guid id)
     {
         try
@@ -43,7 +43,7 @@ public class MerchItemController : ControllerBase
         }
     }
 
-    [HttpGet("/ItemsByMovie/{movieId}")]
+    [HttpGet("ItemsByMovie/{movieId}")]
     public IActionResult GetItemsByMovie([Required]Guid movieId)
     {
         try
@@ -57,7 +57,21 @@ public class MerchItemController : ControllerBase
         }
     }
     
-    [HttpPost]
+    [HttpGet("ItemsByUser/{userId}")]
+    public IActionResult GetItemsByUser([Required]Guid userId)
+    {
+        try
+        {
+            var items = _dbContext.MerchItems.Select(item => item.MovieId == userId).ToList();
+            return Ok(items);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e);
+        }
+    }
+    
+    [HttpPost("Mug")]
     public IActionResult AddNewMug(Mug newMug)
     {
         try
@@ -72,7 +86,33 @@ public class MerchItemController : ControllerBase
         }
     }
 
+    [HttpPost("Shirt")]
+    public IActionResult AddNewShirt(Shirt newShirt)
+    {
+        try
+        {
+            _dbContext.MerchItems.Add(newShirt);
+            _dbContext.SaveChanges();
+            return Content(newShirt.Id.ToString());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e);
+        }
+    }
     
-    // get all by movieId
-    // get all by userId (/ order?)
+    [HttpPost("Poster")]
+    public IActionResult AddNewPoster(Poster newPoster)
+    {
+        try
+        {
+            _dbContext.MerchItems.Add(newPoster);
+            _dbContext.SaveChanges();
+            return Content(newPoster.Id.ToString());
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e);
+        }
+    }
 }
