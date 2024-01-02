@@ -4,5 +4,9 @@ namespace MovieMerchShop.Model;
 
 public class Mug:MerchItem
 {
-    public Color Color { get; }
+    public Color Color { get; set; }
+
+    public Mug()
+    {
+    }
 }
