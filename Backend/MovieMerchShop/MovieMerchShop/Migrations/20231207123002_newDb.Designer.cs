@@ -12,8 +12,8 @@ using MovieMerchShop.Service;
 namespace MovieMerchShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231206100659_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20231207123002_newDb")]
+    partial class newDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,26 @@ namespace MovieMerchShop.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("MovieMerchShop.Model.Genre", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("GenreName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("MovieId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("Genres");
+                });
 
             modelBuilder.Entity("MovieMerchShop.Model.MerchItem", b =>
                 {
@@ -57,7 +77,7 @@ namespace MovieMerchShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PosterLink")
+                    b.Property<string>("Poster")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -65,8 +85,9 @@ namespace MovieMerchShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
+                    b.Property<string>("Year")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -108,11 +129,23 @@ namespace MovieMerchShop.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MovieMerchShop.Model.Genre", b =>
+                {
+                    b.HasOne("MovieMerchShop.Model.Movie", null)
+                        .WithMany("Genres")
+                        .HasForeignKey("MovieId");
+                });
+
             modelBuilder.Entity("MovieMerchShop.Model.MerchItem", b =>
                 {
                     b.HasOne("MovieMerchShop.Model.Order", null)
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId");
+                });
+
+            modelBuilder.Entity("MovieMerchShop.Model.Movie", b =>
+                {
+                    b.Navigation("Genres");
                 });
 
             modelBuilder.Entity("MovieMerchShop.Model.Order", b =>

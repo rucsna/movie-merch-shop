@@ -10,6 +10,7 @@ namespace MovieMerchShop.Model
         public string Year { get; init; }
         public string Poster { get; set; }
         public string Plot { get; set; }
+        public string imdbID { get; set; }
         public List<MovieGenre> MovieGenres { get; } = new();
         public ICollection<string> _actors;
         public ICollection<MerchItem> _merch;
