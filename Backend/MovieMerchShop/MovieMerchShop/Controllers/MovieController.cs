@@ -61,21 +61,7 @@ namespace MovieMerchShop.Controllers
         //     }
         // }
 
-        [HttpGet("GetMoviesByTitle/{title}")]
-        public ActionResult<IEnumerable<Movie>> GetOrderById(string title)
-        {
-            var movies = _context.Movies
-                .Where(movie => movie.Title.Contains(title))
-                .ToList();
-
-            if (movies == null || movies.Count == 0)
-            {
-                return NotFound();
-            }
-
-            return Ok(movies);
-        }
-
+       
         
         [HttpGet("filldata")]
         public async Task<IActionResult> MoviesDataFromApi()
