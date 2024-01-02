@@ -1,56 +1,80 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MovieMerchShop.Service;
 
 namespace MovieMerchShop.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class MovieController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+       // private readonly IHttpClientFactory _httpClientFactory;
         private readonly string _omdbApiKey;
-
+        private readonly IOmdbApiProvider _omdbApiProvider;
+        private readonly IJsonProcessorOmdbApi _jsonProcessor;
+        private ILogger<MovieController> _logger;
+        private readonly AppDbContext _context;
         private static readonly Dictionary<string, List<string>> UserFavoriteMovies =
             new Dictionary<string, List<string>>();
 
 
-        public MovieController(IHttpClientFactory httpClientFactory)
-        {
-            _httpClientFactory = httpClientFactory;
+        public MovieController(AppDbContext context,IOmdbApiProvider omdbApiProvider,IJsonProcessorOmdbApi jsonProcessorOmdbApi, ILogger<MovieController> logger)
+        
+            {
+                _context = context;
+            //_httpClientFactory = httpClientFactory;
             _omdbApiKey = "YourOMDBApiKey";
+            _omdbApiProvider = omdbApiProvider;
+            _logger = logger;
+            _jsonProcessor = jsonProcessorOmdbApi;
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchMovieAsync([FromQuery] string title)
+        // [HttpGet("search")]
+        // public async Task<IActionResult> SearchMovieAsync([FromQuery] string title)
+        // {
+        //     if (string.IsNullOrEmpty(title))
+        //     {
+        //         return BadRequest("Title is a required parameter.");
+        //     }
+        //
+        //     string apiUrl = $"http://www.omdbapi.com/?t={title}";
+        //
+        //     using (var httpClient = _httpClientFactory.CreateClient())
+        //     {
+        //
+        //         httpClient.DefaultRequestHeaders.Add("apikey", _omdbApiKey);
+        //
+        //         var response = await httpClient.GetAsync(apiUrl);
+        //
+        //         if (response.IsSuccessStatusCode)
+        //         {
+        //             var content = await response.Content.ReadAsStringAsync();
+        //             return Ok(content);
+        //         }
+        //         else
+        //         {
+        //             return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
+        //         }
+        //     }
+        // }
+
+        [HttpGet("filldata")]
+        public async Task<IActionResult> MoviesDataFromApi()
         {
-            if (string.IsNullOrEmpty(title))
+            try
             {
-                return BadRequest("Title is a required parameter.");
+                await _jsonProcessor.GetMovies();
+                return Ok("Movies saved successfully.");
             }
-
-            string apiUrl = $"http://www.omdbapi.com/?t={title}";
-
-            using (var httpClient = _httpClientFactory.CreateClient())
+            catch (Exception ex)
             {
-
-                httpClient.DefaultRequestHeaders.Add("apikey", _omdbApiKey);
-
-                var response = await httpClient.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    return Ok(content);
-                }
-                else
-                {
-                    return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
-                }
+                _logger.LogError($"Error saving movies to the database: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
             }
         }
-
-        [HttpPost("add-to-favorites")]
+        
+        [HttpPost("addtofavorites")]
         public IActionResult AddToFavoriteMovies([FromQuery] string username, [FromQuery] string movieTitle)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(movieTitle))
@@ -74,7 +98,7 @@ namespace MovieMerchShop.Controllers
             }
         }
 
-        [HttpDelete("remove-from-favorites")]
+        [HttpDelete("removefromfavorites")]
         public IActionResult RemoveFromFavoriteMovies([FromQuery] string username, [FromQuery] string movieTitle)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(movieTitle))
@@ -93,7 +117,7 @@ namespace MovieMerchShop.Controllers
             }
         }
 
-        [HttpGet("get-favorite-movies")]
+        [HttpGet("getfavoritemovies")]
         public IActionResult GetFavoriteMovies([FromQuery] string username)
         {
             if (string.IsNullOrEmpty(username))
@@ -109,6 +133,18 @@ namespace MovieMerchShop.Controllers
             {
                 return NotFound($"{username} does not have any favorite movies.");
             }
+        }
+        
+        [HttpGet("GetMoviesByTitle/{title}")]
+        public IActionResult GetMoviesByTitle(string title)
+        {
+            var movies = _context.Movies.Where(movie => movie.Title.Contains(title)).ToList();
+            if (movies ==null || movies.Count ==0)
+            {
+                return NotFound();
+            }
+
+            return Ok(movies);
         }
     }
 }

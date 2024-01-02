@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MovieMerchShop.Controllers;
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 
 public class OrderController: ControllerBase
 {
