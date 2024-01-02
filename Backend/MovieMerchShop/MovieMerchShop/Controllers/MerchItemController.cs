@@ -58,13 +58,13 @@ public class MerchItemController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult AddNewItem(MerchItem newItem)
+    public IActionResult AddNewMug(Mug newMug)
     {
         try
         {
-            _dbContext.MerchItems.Add(newItem);
+            _dbContext.MerchItems.Add(newMug);
             _dbContext.SaveChanges();
-            return Content(newItem.Id.ToString());
+            return Content(newMug.Id.ToString());
         }
         catch (Exception e)
         {
