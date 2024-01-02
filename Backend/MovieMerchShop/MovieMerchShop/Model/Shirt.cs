@@ -4,6 +4,10 @@ namespace MovieMerchShop.Model;
 
 public class Shirt:MerchItem
 {
-    public Size Size { get; }
-    public Color Color { get; }
+    public Size Size { get; set; }
+    public Color Color { get; set; }
+
+    public Shirt()
+    {
+    }
 }

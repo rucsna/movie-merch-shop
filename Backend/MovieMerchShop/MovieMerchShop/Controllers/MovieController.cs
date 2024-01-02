@@ -21,7 +21,9 @@ namespace MovieMerchShop.Controllers
 
 
         public MovieController(AppDbContext context,IOmdbApiProvider omdbApiProvider,IJsonProcessorOmdbApi jsonProcessorOmdbApi, ILogger<MovieController> logger)
+
         {
+
             //_httpClientFactory = httpClientFactory;
             _omdbApiKey = "YourOMDBApiKey";
             _omdbApiProvider = omdbApiProvider;
@@ -149,6 +151,18 @@ namespace MovieMerchShop.Controllers
             {
                 return NotFound($"{username} does not have any favorite movies.");
             }
+        }
+        
+        [HttpGet("GetMoviesByTitle/{title}")]
+        public IActionResult GetMoviesByTitle(string title)
+        {
+            var movies = _context.Movies.Where(movie => movie.Title.Contains(title)).ToList();
+            if (movies ==null || movies.Count ==0)
+            {
+                return NotFound();
+            }
+
+            return Ok(movies);
         }
     }
 }
