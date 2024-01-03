@@ -33,7 +33,43 @@ public class AuthController : ControllerBase
 
         return CreatedAtAction(nameof(Register), new RegistrationResponse(result.Email, result.UserName));
     }
-    
+
+    [HttpPost("Login")]
+    public async Task<ActionResult<AuthResponse>> Authenticate([FromBody] AuthRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await _authService.LoginAsync(request.Email, request.Password);
+        if (!result.Success)
+        {
+            AddErrors(result);
+            return BadRequest(ModelState);
+        }
+
+        return Ok(new AuthResponse(result.Email, result.UserName, result.Token));
+    }
+
+    [HttpPatch("DeactivateAccount")]
+    public async Task<ActionResult<DeactivationResponse>> Deactivate([FromBody] AuthRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await _authService.DeactivateAsync(request.Email, request.Password);
+        if (!result.Success)
+        {
+            AddErrors(result);
+            return BadRequest(ModelState);
+        }
+
+        return Ok(new DeactivationResponse(result.UserName));
+    } 
+
     private void AddErrors(AuthResult result)
     {
         foreach (var error in result.ErrorMessages)
