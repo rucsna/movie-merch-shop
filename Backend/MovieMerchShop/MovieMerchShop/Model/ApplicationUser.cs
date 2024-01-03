@@ -3,13 +3,11 @@
 namespace MovieMerchShop.Model;
 
 public class ApplicationUser : IdentityUser
-{
-    //public Guid UserId { get; set; }
-    //public string UserName { get; set; }
+{ 
     public DateTime BirthDate { get; set; }
-    //private string _password;
     public string Address { get; set; }
     public decimal Balance { get; set; }
+    public bool IsActive { get; set; }
     private ICollection<MerchItem> _cart;
     private readonly ICollection<Order> _orders;
     private readonly ICollection<MerchItem> _wishList;
@@ -17,14 +15,12 @@ public class ApplicationUser : IdentityUser
     public ApplicationUser()
     {
     }
-    public ApplicationUser(/*string userName,*/ DateTime birthDate, string password, string address)
+    public ApplicationUser(DateTime birthDate, string password, string address)
     {
-        //UserId = Guid.NewGuid();
-        //UserName = userName;
         BirthDate = birthDate;
-        //_password = password;
         Address = address;
         Balance = 0;
+        IsActive = true;
         _cart = new List<MerchItem>();
         _orders = new List<Order>();
         _wishList = new List<MerchItem>();
