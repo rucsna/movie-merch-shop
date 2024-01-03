@@ -2,7 +2,7 @@
 
 namespace MovieMerchShop.Model;
 
-public class User : IdentityUser
+public class ApplicationUser : IdentityUser
 {
     //public Guid UserId { get; set; }
     //public string UserName { get; set; }
@@ -14,10 +14,10 @@ public class User : IdentityUser
     private readonly ICollection<Order> _orders;
     private readonly ICollection<MerchItem> _wishList;
 
-    public User()
+    public ApplicationUser()
     {
     }
-    public User(/*string userName,*/ DateTime birthDate, string password, string address)
+    public ApplicationUser(/*string userName,*/ DateTime birthDate, string password, string address)
     {
         //UserId = Guid.NewGuid();
         //UserName = userName;
