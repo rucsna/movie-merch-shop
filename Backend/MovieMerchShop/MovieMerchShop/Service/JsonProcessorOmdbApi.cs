@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using MovieMerchShop.Data;
 using MovieMerchShop.Model;
 
 namespace MovieMerchShop.Service;

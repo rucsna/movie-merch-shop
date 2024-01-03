@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using MovieMerchShop.Data;
 using MovieMerchShop.Model;
 using MovieMerchShop.Service;
 
@@ -23,25 +24,25 @@ public class MerchItemController : ControllerBase
         return Ok(items);
     }
     
-    [HttpGet("{id}")]
-    public IActionResult GetItemById(Guid id)
-    {
-        try
-        {
-            var user = _dbContext.Users.Find(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e);
-        }
-    }
+    // [HttpGet("{id}")]
+    // public IActionResult GetItemById(Guid id)
+    // {
+    //     try
+    //     {
+    //         var user = _dbContext.Users.Find(id);
+    //
+    //         if (user == null)
+    //         {
+    //             return NotFound();
+    //         }
+    //
+    //         return Ok();
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         return BadRequest(e);
+    //     }
+    // }
 
     [HttpGet("ItemsByMovie/{movieId}")]
     public IActionResult GetItemsByMovie([Required]Guid movieId)

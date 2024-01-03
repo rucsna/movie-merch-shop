@@ -2,6 +2,7 @@
 using MovieMerchShop.Model;
 using MovieMerchShop.Service;
 using System.Linq;
+using MovieMerchShop.Data;
 
 namespace MovieMerchShop.Controllers;
 [ApiController]
