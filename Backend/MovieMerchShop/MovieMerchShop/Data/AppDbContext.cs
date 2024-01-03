@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieMerchShop.Model;
 
-namespace MovieMerchShop.Service;
+namespace MovieMerchShop.Data;
 
 public class AppDbContext : DbContext
 {
