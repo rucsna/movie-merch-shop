@@ -1,8 +1,7 @@
-// LandingPage.jsx
 import React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import MovieCard from "../Components/MovieCard";
-import MerchandiseList from "../Components/MerchandiseList"; // Import MerchandiseList component
+import MerchandiseList from "../Components/MerchandiseList"; 
 import mmwLogo from "../assets/MMWlogo.png";
 import "../index.css";
 
@@ -17,24 +16,20 @@ const LandingPage = ({ children }) => {
     setSearchTerm(term);
 
     if (term.trim() === "") {
-    
       setMovies([]);
       setSelectedMovie(null);
       return;
     }
 
     try {
-   
       const response = await fetch(
         `http://www.omdbapi.com/?apikey=85cd027d&s=${encodeURIComponent(term)}`
       );
       const data = await response.json();
-      console.log(data)
 
       if (data.Search) {
         setMovies(data.Search);
       } else {
-   
         setMovies([]);
       }
 
@@ -57,13 +52,13 @@ const LandingPage = ({ children }) => {
       <nav className="nav-container">
         <ul className="nav-list">
           <li>
-            <a href="/products">Products</a>
+            <Link to="/products">Products</Link>
           </li>
           <li>
             <a href="/signin">Sign in</a>
           </li>
           <li>
-            <a href="/registration">Registration</a>
+            <Link to="/registration">Registration</Link>
           </li>
           <li>
             <a href="/cart">Cart</a>
