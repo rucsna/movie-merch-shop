@@ -40,6 +40,7 @@ app.UseCors(options =>
 });
 
 AddRoles();
+AddAdmin();
 
 app.MapControllers();
 
@@ -157,10 +158,33 @@ void AddRoles()
 
 async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
 {
-    await roleManager.CreateAsync(new IdentityRole(builder.Configuration["RoleSettings:AdminRole"]));
+    await roleManager.CreateAsync(new IdentityRole(builder.Configuration["RoleSettings:AdminRole"]!));
 }
 
 async Task CreateUserRole(RoleManager<IdentityRole> roleManager)
 {
-    await roleManager.CreateAsync(new IdentityRole(builder.Configuration["RoleSettings:UserRole"]));
+    await roleManager.CreateAsync(new IdentityRole(builder.Configuration["RoleSettings:UserRole"]!));
+}
+
+void AddAdmin()
+{
+    var tAdmin = CreateAdminIfNotExists();
+    tAdmin.Wait();
+}
+
+async Task CreateAdminIfNotExists()
+{
+    using var scope = app.Services.CreateScope();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var adminInDb = await userManager.FindByEmailAsync("admin@admin.com");
+    if (adminInDb == null)
+    {
+        var admin = new ApplicationUser { UserName = "admin", Email = "admin@admin.com" };
+        var adminCreated = await userManager.CreateAsync(admin, "admin123");
+
+        if (adminCreated.Succeeded)
+        {
+            await userManager.AddToRoleAsync(admin, "Admin");
+        }
+    }
 }
