@@ -179,7 +179,7 @@ async Task CreateAdminIfNotExists()
     var adminInDb = await userManager.FindByEmailAsync("admin@admin.com");
     if (adminInDb == null)
     {
-        var admin = new ApplicationUser { UserName = "admin", Email = "admin@admin.com" };
+        var admin = new ApplicationUser { UserName = "admin", Email = "admin@admin.com", BirthDate = new DateTime(2000,12,12), Address = "admin"};
         var adminCreated = await userManager.CreateAsync(admin, "admin123");
 
         if (adminCreated.Succeeded)
