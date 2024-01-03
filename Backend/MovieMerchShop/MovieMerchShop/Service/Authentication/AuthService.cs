@@ -17,7 +17,7 @@ public class AuthService : IAuthService
     public async Task<AuthResult> RegisterAsync(string email, string userName, string password, DateTime birthDate, string address)
     {
         var result = await _userManager.CreateAsync(
-            new ApplicationUser { UserName = userName, Email = email, BirthDate = birthDate, Address = address }, password);
+            new ApplicationUser { UserName = userName, Email = email, BirthDate = birthDate, Address = address, IsActive = true}, password);
 
         if (!result.Succeeded)
         {
@@ -41,8 +41,36 @@ public class AuthService : IAuthService
             return InvalidPassword(email, managedUser.UserName);
         }
 
+        if (!managedUser.IsActive)
+        {
+            return InactiveUser(managedUser.UserName);
+        }
+        
         var accessToken = _tokenService.CreateToken(managedUser);
         return new AuthResult(true, managedUser.Email, managedUser.UserName, accessToken);
+    }
+
+    public async Task<AuthResult> DeactivateAsync(string email, string password)
+    {
+        var managedUser = await _userManager.FindByEmailAsync(email);
+        if (managedUser == null)
+        {
+            return InvalidEmail(email);
+        }
+        var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, password);
+        if (!isPasswordValid)
+        {
+            return InvalidPassword(email, managedUser.UserName);
+        }
+
+        if (!managedUser.IsActive)
+        {
+            return InactiveUser(managedUser.UserName);
+        }
+        
+        managedUser.IsActive = false;
+        await _userManager.UpdateAsync(managedUser);
+        return new AuthResult(true, $"", managedUser.UserName, "");
     }
 
     private static AuthResult FailedRegistration(IdentityResult result, string email, string username)
@@ -68,6 +96,13 @@ public class AuthService : IAuthService
     {
         var result = new AuthResult(false, email, userName, "");
         result.ErrorMessages.Add("Bad credentials", "Invalid password");
+        return result;
+    }
+
+    private static AuthResult InactiveUser(string userName)
+    {
+        var result = new AuthResult(false, "", userName, "");
+        result.ErrorMessages.Add("Deleted user", "This user is not active anymore.");
         return result;
     }
 }
