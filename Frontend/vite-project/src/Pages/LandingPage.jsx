@@ -70,7 +70,7 @@ const LandingPage = ({ children }) => {
             <Link to="/registration">Registration</Link>
           </li>
           <li>
-            <a href="/cart">Cart</a>
+            <Link to="/profile">Profile</Link>
           </li>
         </ul>
       </nav>
@@ -116,6 +116,5 @@ const LandingPage = ({ children }) => {
     </div>
   );
 };
-
 
 export default LandingPage;
