@@ -64,7 +64,7 @@ const LandingPage = ({ children }) => {
             <Link to="/products">Products</Link>
           </li>
           <li>
-            <a href="/signin">Sign in</a>
+            <a href="/login">Login</a>
           </li>
           <li>
             <Link to="/registration">Registration</Link>

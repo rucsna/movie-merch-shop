@@ -9,6 +9,8 @@ import Layout from './Pages/Layout';
 import ErrorPage from "./Pages/ErrorPage";
 import Products from './Pages/Products';
 import Registration from './Pages/Registration';
+import Login from './Pages/Login';
+
 
 const router = createBrowserRouter([
   {
@@ -23,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/registration", 
         element: <Registration />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
       },
      /*  {
         path: "/:movieId/products",
