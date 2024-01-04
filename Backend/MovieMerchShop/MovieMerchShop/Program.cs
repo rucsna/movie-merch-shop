@@ -42,7 +42,7 @@ app.UseCors(options =>
 
 AddRoles();
 AddAdmin();
-CreateMerchandise();
+//CreateMerchandise();
 
 app.MapControllers();
 
@@ -122,8 +122,8 @@ void AddAuthentication()
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = builder.Configuration["JwtSettings:ValidIssuer"],
                 ValidAudience = builder.Configuration["JwtSettings:ValidAudience"],
-                IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes("!SomethingSecret!")),
+                 IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtIssuerSigningKey"])),
             };
         });
 }
