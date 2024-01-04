@@ -18,4 +18,40 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    {
+    }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Shirt>()
+            .Property(e => e.Color)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<Shirt>()
+            .Property(e => e.Size)
+            .HasConversion<string>();
+
+          modelBuilder.Entity<Mug>()
+                    .Property(e => e.Color)
+                    .HasConversion<string>();
+
+          modelBuilder.Entity<Poster>()
+              .Property(e => e.Size)
+              .HasConversion<string>();
+
+          modelBuilder.Entity<Poster>()
+              .Property(e => e.Material)
+              .HasConversion<string>();
+
+        
+        
+        // modelBuilder.Entity<Shirt>()
+        //     .Property(e => e.Type)
+        //     .HasConversion<string>();
+        
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
