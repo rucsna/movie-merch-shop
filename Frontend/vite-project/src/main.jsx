@@ -8,6 +8,7 @@ import './index.css'
 import Layout from './Pages/Layout';
 import ErrorPage from "./Pages/ErrorPage";
 import Products from './Pages/Products';
+import Registration from './Pages/Registration';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
        {
         path: "/products",
         element: <Products />,
+      },
+      {
+        path: "/registration", 
+        element: <Registration />,
       },
      /*  {
         path: "/:movieId/products",
@@ -39,10 +44,7 @@ const router = createBrowserRouter([
         path: "/signin",
         element: <SignIn />,
       },
-      {
-        path: "/registration",
-        element: <Registration />,
-      }, */
+      */
     ],
   },
 ]);

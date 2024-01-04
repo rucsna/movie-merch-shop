@@ -5,7 +5,7 @@ using MovieMerchShop.Model;
 
 namespace MovieMerchShop.Data;
 
-public class UsersContext : IdentityUserContext<ApplicationUser>
+public class UsersContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
 {
     public UsersContext(DbContextOptions<UsersContext> options) : base(options)
     {
