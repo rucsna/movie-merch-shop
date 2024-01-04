@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieMerchShop.Contracts;
 using MovieMerchShop.Model;
 using MovieMerchShop.Service.Authentication;
+using System.Text.Json;
 
 namespace MovieMerchShop.Controllers;
 
@@ -57,7 +58,7 @@ public class AuthController : ControllerBase
 
         return Ok(new AuthResponse(result.Email, result.UserName, result.Token));
     }
-    
+
     [Authorize]
     [HttpGet("GetUserByEmail")]
     public ActionResult<ApplicationUser> GetOrderByEmail()
@@ -65,7 +66,15 @@ public class AuthController : ControllerBase
         var name = User.FindFirstValue(ClaimTypes.Name);
         var email = User.FindFirstValue(ClaimTypes.Email);
         Console.WriteLine(name);
-        return Ok($"{name} - {email}");
+
+        var respObject = new JsonObject
+        {
+            UserName = name,
+            Email = email
+        };
+        var response = JsonSerializer.Serialize(respObject);
+        
+        return Ok(response);
     }
 
     [Authorize(Roles="User, Admin")]
