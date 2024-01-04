@@ -69,7 +69,7 @@ public class TokenService : ITokenService
     {
         return new SigningCredentials(
             new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("!SomethingSecret!")
+                Encoding.UTF8.GetBytes(_configuration["JwtIssuerSigningKey"])
             ),
             SecurityAlgorithms.HmacSha256
         );
