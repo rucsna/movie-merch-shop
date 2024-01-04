@@ -9,7 +9,7 @@ const Profile = () => {
         const response = await fetch("/api/Auth/GetUserByEmail", {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${AuthToken}`, 
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`, 
           },
         });
 
@@ -35,7 +35,8 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <h2>Profile</h2>
-      <p>Email: {userInfo.email}</p>
+      <p>User name: {userInfo.UserName}</p>
+      <p>Email: {userInfo.Email}</p>
     </div>
   );
 };
