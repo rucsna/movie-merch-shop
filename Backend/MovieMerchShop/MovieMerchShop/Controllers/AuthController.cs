@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieMerchShop.Contracts;
+using MovieMerchShop.Model;
 using MovieMerchShop.Service.Authentication;
 
 namespace MovieMerchShop.Controllers;
@@ -54,6 +56,16 @@ public class AuthController : ControllerBase
         }
 
         return Ok(new AuthResponse(result.Email, result.UserName, result.Token));
+    }
+    
+    [Authorize]
+    [HttpGet("GetUserByEmail")]
+    public ActionResult<ApplicationUser> GetOrderByEmail()
+    {
+        var name = User.FindFirstValue(ClaimTypes.Name);
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        Console.WriteLine(name);
+        return Ok($"{name} - {email}");
     }
 
     [Authorize(Roles="User, Admin")]
