@@ -23,16 +23,26 @@ const LandingPage = ({ children }) => {
 
     try {
       const response = await fetch(
-        `http://www.omdbapi.com/?apikey=85cd027d&s=${encodeURIComponent(term)}`
+        `http://localhost:5257/api/Movie/GetMoviesByTitle/${term}`
       );
       const data = await response.json();
+
+         console.log(data);
+      if (data.length >0) {
+        setMovies(data);
+        
+      } else {
+        console.log("else")
+
 
       if (data.Search) {
         setMovies(data.Search);
       } else {
+
         setMovies([]);
       }
-
+      
+      console.log(movies[0])
       setSelectedMovie(null);
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -43,7 +53,6 @@ const LandingPage = ({ children }) => {
     setSelectedMovie(movie);
     setMovies([]); 
   };
-
   return (
     <div className="landing-page">
       <header className="logo-header">
@@ -76,18 +85,19 @@ const LandingPage = ({ children }) => {
             style={{ width: "400px" }}
           />
           <datalist id="movies-list" style={{ width: "400px" }}>
-            {movies.map((movie) => (
-              <option key={movie.imdbID} value={movie.Title} />
-            ))}
+            {movies.map((movie) => {
+              //console.log(movie.title);
+              return <option key={movie.id} value={movie.title} />;
+            })}
           </datalist>
         </div>
       </div>
       {selectedMovie && (
         <div>
           <MovieCard
-            title={selectedMovie.Title}
-            year={selectedMovie.Year}
-            posterUrl={`http://img.omdbapi.com/?apikey=85cd027d&i=${selectedMovie.imdbID}`}
+            title={selectedMovie.title}
+            year={selectedMovie.year}
+            posterUrl={selectedMovie.imdbID}
           />
           <MerchandiseList movie={selectedMovie} />
         </div>
@@ -95,14 +105,10 @@ const LandingPage = ({ children }) => {
       <div className="movie-cards">
         {movies.map((movie) => (
           <MovieCard
-            key={movie.imdbID}
-            title={movie.Title}
-            year={movie.Year}
-            posterUrl={
-              movie.Poster !== "N/A"
-                ? `http://img.omdbapi.com/?apikey=85cd027d&i=${movie.imdbID}`
-                : null
-            }
+            key={movie.id}
+            title={movie.title}
+            year={movie.year}
+            posterUrl={movie.imdbID}
             onClick={() => handleMovieSelect(movie)}
           />
         ))}

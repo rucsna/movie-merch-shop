@@ -1,6 +1,6 @@
 ﻿namespace MovieMerchShop.Enum;
 
-public enum Size
+public enum TShirtSize
 {
     XS, S, M, L, XL, XXL
 }
