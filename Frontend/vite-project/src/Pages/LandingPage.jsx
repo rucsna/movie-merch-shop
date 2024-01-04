@@ -27,22 +27,21 @@ const LandingPage = ({ children }) => {
       );
       const data = await response.json();
 
-         console.log(data);
-      if (data.length >0) {
+      console.log(data);
+
+      if (data.length > 0) {
         setMovies(data);
-        
       } else {
-        console.log("else")
+        console.log("else");
 
-
-      if (data.Search) {
-        setMovies(data.Search);
-      } else {
-
-        setMovies([]);
+        if (data.Search) {
+          setMovies(data.Search);
+        } else {
+          setMovies([]);
+        }
       }
-      
-      console.log(movies[0])
+
+      console.log(movies[0]);
       setSelectedMovie(null);
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -51,8 +50,9 @@ const LandingPage = ({ children }) => {
 
   const handleMovieSelect = (movie) => {
     setSelectedMovie(movie);
-    setMovies([]); 
+    setMovies([]);
   };
+
   return (
     <div className="landing-page">
       <header className="logo-header">
@@ -85,10 +85,9 @@ const LandingPage = ({ children }) => {
             style={{ width: "400px" }}
           />
           <datalist id="movies-list" style={{ width: "400px" }}>
-            {movies.map((movie) => {
-              //console.log(movie.title);
-              return <option key={movie.id} value={movie.title} />;
-            })}
+            {movies.map((movie) => (
+              <option key={movie.id} value={movie.title} />
+            ))}
           </datalist>
         </div>
       </div>
