@@ -8,5 +8,6 @@ public class Mug:MerchItem
 
     public Mug()
     {
+        Type = ItemType.Mug;
     }
 }
