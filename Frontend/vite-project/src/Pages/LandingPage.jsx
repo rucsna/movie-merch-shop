@@ -34,11 +34,6 @@ const LandingPage = ({ children }) => {
       } else {
         console.log("else")
 
-
-      if (data.Search) {
-        setMovies(data.Search);
-      } else {
-
         setMovies([]);
       }
       
@@ -117,5 +112,6 @@ const LandingPage = ({ children }) => {
     </div>
   );
 };
+
 
 export default LandingPage;
