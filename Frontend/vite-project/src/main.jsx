@@ -10,6 +10,7 @@ import ErrorPage from "./Pages/ErrorPage";
 import Products from './Pages/Products';
 import Registration from './Pages/Registration';
 import Login from './Pages/Login';
+import Profile from './Pages/Profile';
 
 
 const router = createBrowserRouter([
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
       },
      /*  {
         path: "/:movieId/products",

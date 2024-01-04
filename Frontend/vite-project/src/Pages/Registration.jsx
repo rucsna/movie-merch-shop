@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Registration = () => {
   const [username, setUsername] = useState("");
@@ -6,6 +7,7 @@ const Registration = () => {
   const [password, setPassword] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [address, setAddress] = useState("");
+  const navigate = useNavigate();
 
   const handleRegistration = async (e) => {
     e.preventDefault();
@@ -28,12 +30,17 @@ const Registration = () => {
       });
 
       if (!response.ok) {
-        
         console.error("Registration failed:", response.statusText);
         return;
       }
 
+      const data = await response.json();
       console.log("Registration successful");
+      console.log("User Email:", data.email);
+      console.log("User Token:", data.token);
+
+  
+      navigate("/profile");
     } catch (error) {
       console.error("Error during registration:", error);
     }
