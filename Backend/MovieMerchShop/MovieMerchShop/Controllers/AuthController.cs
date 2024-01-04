@@ -6,7 +6,7 @@ using MovieMerchShop.Service.Authentication;
 namespace MovieMerchShop.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/api/[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -17,8 +17,7 @@ public class AuthController : ControllerBase
         _authService = authService;
         _configuration = configuration;
     }
-
-    [Authorize(Roles="User, Admin")]
+    
     [HttpPost("Register")]
     public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
     {
