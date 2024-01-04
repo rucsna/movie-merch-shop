@@ -37,8 +37,7 @@ public class AuthController : ControllerBase
 
         return CreatedAtAction(nameof(Register), new RegistrationResponse(result.Email, result.UserName));
     }
-
-    [Authorize(Roles="User, Admin")]
+    
     [HttpPost("Login")]
     public async Task<ActionResult<AuthResponse>> Authenticate([FromBody] AuthRequest request)
     {

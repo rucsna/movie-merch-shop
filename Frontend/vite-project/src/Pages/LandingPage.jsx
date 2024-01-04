@@ -23,7 +23,7 @@ const LandingPage = ({ children }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:5257/api/Movie/GetMoviesByTitle/${term}`
+        `/api/Movie/GetMoviesByTitle/${term}`
       );
       const data = await response.json();
 
@@ -107,7 +107,7 @@ const LandingPage = ({ children }) => {
             key={movie.id}
             title={movie.title}
             year={movie.year}
-            posterUrl={movie.imdbID}
+            imdbID={movie.imdbID}
             onClick={() => handleMovieSelect(movie)}
           />
         ))}
