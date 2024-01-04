@@ -40,7 +40,7 @@ const Registration = () => {
       console.log("User Token:", data.token);
 
   
-      navigate("/profile");
+  
     } catch (error) {
       console.error("Error during registration:", error);
     }
