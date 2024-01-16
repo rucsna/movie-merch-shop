@@ -1,3 +1,5 @@
+using MovieMerchShop.Contracts;
+
 namespace MovieMerchShop.Service.Authentication;
 
 public interface IAuthService
