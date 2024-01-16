@@ -26,6 +26,11 @@ public class OrderRepository : IOrderRepository
     {
         return await _dbContext.Orders.ToListAsync();
     }
+    
+    public async Task<Order?> GetOrderByIdAsync(Guid orderId)
+    {
+        return await _dbContext.Orders.FindAsync(orderId);
+    }
 
     public async Task<IEnumerable<Order>> GetByUserIdAsync(Guid userId)
     {
