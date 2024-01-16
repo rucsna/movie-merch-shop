@@ -40,8 +40,8 @@ app.UseCors(options =>
         .AllowAnyHeader();
 });
 
-AddRoles();
-AddAdmin();
+//AddRoles();
+//AddAdmin();
 //CreateMerchandise();
 
 app.MapControllers();
