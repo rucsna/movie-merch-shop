@@ -72,6 +72,9 @@ const LandingPage = ({ children }) => {
           <li>
             <Link to="/profile">Profile</Link>
           </li>
+          <li>
+            <Link to="/cart">Cart</Link>
+          </li>
         </ul>
       </nav>
       <div className="search-bar-container">

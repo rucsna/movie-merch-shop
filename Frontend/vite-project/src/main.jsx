@@ -11,7 +11,7 @@ import Products from './Pages/Products';
 import Registration from './Pages/Registration';
 import Login from './Pages/Login';
 import Profile from './Pages/Profile';
-
+import Cart from "./Pages/Cart";
 
 const router = createBrowserRouter([
   {
@@ -19,12 +19,12 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-       {
+      {
         path: "/products",
         element: <Products />,
       },
       {
-        path: "/registration", 
+        path: "/registration",
         element: <Registration />,
       },
       {
@@ -35,7 +35,11 @@ const router = createBrowserRouter([
         path: "/profile",
         element: <Profile />,
       },
-     /*  {
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+      /*  {
         path: "/:movieId/products",
         element: <ProductsByMovie />,
       },
@@ -65,3 +69,4 @@ root.render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
+    
