@@ -7,9 +7,5 @@ public class MerchItem
     public decimal Price { get; set; }
     public Guid MovieId { get; set; }
     public int Quantity { get; set; }
-
-    public MerchItem()
-    {
-    }
-    
+    public List<Order> Orders { get; set; } = new();
 }
