@@ -3,15 +3,17 @@ import React, { useState, useEffect } from "react";
 const MerchandiseList = ({ movie }) => {
   const [merchandise, setMerchandise] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     const fetchMerchandise = async () => {
       try {
-        // TODO: Replace the URL with the actual endpoint to fetch merchandise
-        const response = await fetch(`https://api.example.com/merchandise?movieId=${movie.imdbID}`);
+        const response = await fetch(
+          `/api/MerchItem/ItemsByMovie/${movie.id}`
+        );
         const data = await response.json();
 
-   
+        console.log(data)
         setMerchandise(data);
       } catch (error) {
         console.error("Error fetching merchandise:", error);
@@ -25,10 +27,29 @@ const MerchandiseList = ({ movie }) => {
     }
   }, [movie]);
 
+  
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+
+   localStorage.setItem("cart", JSON.stringify([...cart, item]));
+  };
+
+  const getCartFromLocalStorage = () => {
+    const storedCart = localStorage.getItem("cart");
+
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  };
+  
+  useEffect(() => {
+    getCartFromLocalStorage();
+  }, []);
+  
   if (!movie) {
     return <p>No movie selected</p>;
   }
-
+  
   return (
     <div>
       <h2>Merchandise for {movie.Title}</h2>
@@ -41,7 +62,10 @@ const MerchandiseList = ({ movie }) => {
           <p>Available merchandise:</p>
           <ul>
             {merchandise.map((item) => (
-              <li key={item.id}>{item.name} - ${item.price}</li>
+              <li key={item.id}>
+                {movie.title}: type:{item.type} - ${item.price}
+                <button type="button" onClick={() => addToCart(item)}>Add to cart</button>
+              </li>
             ))}
           </ul>
         </div>
