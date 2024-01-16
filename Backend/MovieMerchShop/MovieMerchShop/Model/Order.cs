@@ -4,10 +4,7 @@ public class Order
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
+    public List<MerchItem> Items { get; set; } = new();
     public DateTime OrderTime { get; set; }
-    public ICollection<MerchItem> OrderItems { get; set; }
-
-    public Order()
-    {
-    }
+    public decimal OrderSum { get; set; }
 }
