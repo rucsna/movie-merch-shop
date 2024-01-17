@@ -15,8 +15,7 @@ import Cart from "./Pages/Cart";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Layout />,
+       element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -65,8 +64,8 @@ const router = createBrowserRouter([
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+ 
     <RouterProvider router={router} />
-  </React.StrictMode>
+  
 );
     

@@ -1,13 +1,12 @@
-
 import React from "react";
+import { Outlet } from "react-router-dom";
 import LandingPage from "../LandingPage";
 
-const Layout = ({ children }) => {
+const Layout = () => {
   return (
     <div className="Layout">
       <LandingPage />
-      {children}
-    </div>
+         </div>
   );
 };
 

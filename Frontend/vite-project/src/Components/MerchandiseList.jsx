@@ -18,7 +18,8 @@ const MerchandiseList = ({ movie }) => {
         }
 
         const data = await response.json();
-        setMerchandise(data);
+        setMerchandise(data)
+        console.log(data);
       } catch (error) {
         console.error("Error fetching merchandise:", error.message);
       } finally {
