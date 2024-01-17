@@ -51,6 +51,7 @@ app.MapControllers();
 app.Run();
 
 
+
 void AddServices()
 {
     builder.Services.AddControllers().AddJsonOptions(options =>
@@ -270,4 +271,8 @@ void CreateMerchandise()
 
         context.SaveChanges();
     }
+}
+
+public partial class Program
+{
 }
