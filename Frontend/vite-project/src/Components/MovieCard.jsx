@@ -2,7 +2,6 @@ import React from "react";
 import "../index.css";
 
 const MovieCard = ({ title, year, imdbID, onClick }) => {
-  console.log(imdbID)
   return (
     <div className="movie-card" onClick={onClick}>
       <img src={`http://img.omdbapi.com/?apikey=85cd027d&i=${imdbID}`} alt={`${title} Poster`} className="poster" />

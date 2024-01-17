@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using MovieMerchShop.Contracts;
 using MovieMerchShop.Model;
 
 namespace MovieMerchShop.Service.Authentication;

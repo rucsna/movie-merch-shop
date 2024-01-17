@@ -1,4 +1,4 @@
-namespace MovieMerchShop.Service.Authentication;
+namespace MovieMerchShop.Contracts;
 
 public record AuthResult(
     bool Success,

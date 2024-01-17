@@ -5,6 +5,7 @@ using MovieMerchShop.Contracts;
 using MovieMerchShop.Model;
 using MovieMerchShop.Service.Authentication;
 using System.Text.Json;
+using MovieMerchShop.Service.Repository;
 
 namespace MovieMerchShop.Controllers;
 
@@ -13,12 +14,14 @@ namespace MovieMerchShop.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IUserRepository _userRepository;
     private readonly IConfiguration _configuration;
 
-    public AuthController(IAuthService authService, IConfiguration configuration)
+    public AuthController(IAuthService authService, IConfiguration configuration, IUserRepository userRepository)
     {
         _authService = authService;
         _configuration = configuration;
+        _userRepository = userRepository;
     }
     
     [HttpPost("Register")]
