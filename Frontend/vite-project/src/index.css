@@ -159,3 +159,16 @@ button:focus-visible {
 #movies-list {
   width: 400px;
 }
+
+
+.merchandise-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; 
+}
+
+.merchandise-card {
+  border: 1px solid #ccc;
+  padding: 16px;
+  width: 200px; 
+  margin-bottom: 20px; }
