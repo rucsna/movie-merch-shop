@@ -154,8 +154,9 @@ const MerchandiseList = ({ movie }) => {
         <div>
           {merchandise.map((item) => (
             <div key={item.id}>
-              <p>{item.color}</p>
-              
+              <p>Type:{item.type}</p>
+              {item.size && <p>Size: {item.size}</p>}
+              {item.material && <p>Material: {item.material}</p>}
               <p>
                 Quantity: {item.quantity}, Price: ${item.price}
               </p>

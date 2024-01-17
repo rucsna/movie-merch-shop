@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MovieMerchShop.Data;
@@ -55,6 +56,8 @@ void AddServices()
 {
     builder.Services.AddControllers().AddJsonOptions(options =>
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+    builder.Services.AddControllers().AddJsonOptions(options =>
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
     builder.Services.AddScoped<IOmdbApiProvider, OmdbApi>();
     builder.Services.AddScoped<IJsonProcessorOmdbApi, JsonProcessorOmdbApi>();
     builder.Services.AddScoped<IAuthService, AuthService>();
