@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieMerchShop.Data;
 using MovieMerchShop.Model;
 using MovieMerchShop.Service;
+using MovieMerchShop.Service.Repository;
 
 namespace MovieMerchShop.Controllers;
 
@@ -11,17 +12,27 @@ namespace MovieMerchShop.Controllers;
 public class MerchItemController : ControllerBase
 {
     private readonly AppDbContext _dbContext;
+    private readonly IMerchItemRepository _itemRepository;
 
-    public MerchItemController(AppDbContext dbContext)
+    public MerchItemController(AppDbContext dbContext, IMerchItemRepository itemRepository)
     {
         _dbContext = dbContext;
+        _itemRepository = itemRepository;
     }
     
     [HttpGet]
-    public IActionResult GetAllItems()
+    public async Task<IActionResult> GetAllItems()
     {
-        List<MerchItem> items = _dbContext.MerchItems.ToList();
-        return Ok(items);
+        try
+        {
+            var items = await _itemRepository.GetAllItemsAsync();
+            return Ok(items);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest("Error getting items");
+        }
     }
     
     // [HttpGet("{id}")]

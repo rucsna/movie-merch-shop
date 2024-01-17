@@ -44,7 +44,7 @@ app.UseCors(options =>
 
 AddRoles();
 AddAdmin();
-CreateMerchandise();
+//CreateMerchandise();
 
 app.MapControllers();
 
@@ -62,6 +62,7 @@ void AddServices()
     builder.Services.AddScoped<MovieService>();
     builder.Services.AddScoped<IMerchItemRepository, MerchItemRepository>();
     builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
 }
 
 
