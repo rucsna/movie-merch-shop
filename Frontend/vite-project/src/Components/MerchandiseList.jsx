@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import MerchandiseSection from "../Components/MerchandiseSection"
 
 const MerchandiseList = ({ movie }) => {
-  const [merchandise, setMerchandise] = useState([]);
+  const [posters, setPosters] = useState([]);
+  const [mugs, setMugs] = useState([]);
+  const [shirts, setShirts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState({
@@ -46,12 +49,10 @@ const MerchandiseList = ({ movie }) => {
       }
 
       const data = await response.json();
-     
-      setMerchandise(data.$values)     
+      return data.$values;
     } catch (error) {
       console.error("Error fetching merchandise:", error.message);
-    } finally {
-      setLoading(false);
+      return [];
     }
   };
 
@@ -67,28 +68,31 @@ const MerchandiseList = ({ movie }) => {
       try {
         setLoading(true);
 
-        const selectedTypeKeys = Object.keys(selectedTypes).filter(
-          (key) => selectedTypes[key]
-        );
+        const selectedTypeKeys = Object.keys(selectedTypes);
 
-        const numericTypes = selectedTypeKeys.map((key) =>
-          getItemTypeValue(typeMappings[key])
-        );
-
-        const fetchPromises = numericTypes.map((type) =>
-          fetchMerchandise(movie.id, type)
+        const fetchPromises = selectedTypeKeys.map((key) =>
+          fetchMerchandise(movie.id, getItemTypeValue(typeMappings[key]))
         );
 
         const responses = await Promise.all(fetchPromises);
 
-        const responseDataPromises = responses.map((response) =>
-          response.json()
-        );
-        const responseData = await Promise.all(responseDataPromises);
-
-        const mergedMerchandise = responseData.flat();
-        console.log(mergedMerchandise)
-        setMerchandise(mergedMerchandise);
+        // Update the state for each type
+        responses.forEach((data, index) => {
+          const type = selectedTypeKeys[index].toLowerCase();
+          switch (type) {
+            case "mug":
+              setMugs(data);
+              break;
+            case "poster":
+              setPosters(data);
+              break;
+            case "shirt":
+              setShirts(data);
+              break;
+            default:
+              break;
+          }
+        });
       } catch (error) {
         console.error("Error fetching merchandise:", error.message);
       } finally {
@@ -106,68 +110,47 @@ const MerchandiseList = ({ movie }) => {
     localStorage.setItem("cart", JSON.stringify([...cart, item]));
   };
 
-  /* // Group merchandise items by name and calculate total quantity
-  const groupedMerchandise = merchandise.reduce((acc, item) => {
-    const itemName = getItemName(item.type);
-    if (!acc[itemName]) {
-      acc[itemName] = { totalQuantity: 0, items: [] };
-    }
-    acc[itemName].totalQuantity += item.quantity;
-    acc[itemName].items.push(item);
-    return acc;
-  }, {}); */
-
   return (
     <div>
       <h2>Available merchandise for {movie.title}:</h2>
       <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={selectedTypes.mug}
-            onChange={() => handleCheckboxChange("mug")}
-          />
-          Mug
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={selectedTypes.poster}
-            onChange={() => handleCheckboxChange("poster")}
-          />
-          Poster
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={selectedTypes.shirt}
-            onChange={() => handleCheckboxChange("shirt")}
-          />
-          Shirt
-        </label>
+        {Object.entries(selectedTypes).map(([type, isChecked]) => (
+          <label key={type}>
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={() => handleCheckboxChange(type)}
+            />
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </label>
+        ))}
       </div>
       {loading ? (
         <p>Loading merchandise...</p>
-      ) : merchandise.length === 0 ? (
-        <p>No merchandise available for this movie</p>
       ) : (
-        <div>
-          {merchandise.map((item) => (
-            <div key={item.id}>
-              <p>{item.color}</p>
-              
-              <p>
-                Quantity: {item.quantity}, Price: ${item.price}
-              </p>
-              <button type="button" onClick={() => addToCart(item)}>
-                Add to cart
-              </button>
-            </div>
-          ))}
+        <div className="merchandise-container">
+          {selectedTypes.mug && mugs.length > 0 && (
+            <MerchandiseSection type="Mug" items={mugs} addToCart={addToCart} />
+          )}
+          {selectedTypes.poster && posters.length > 0 && (
+            <MerchandiseSection
+              type="Poster"
+              items={posters}
+              addToCart={addToCart}
+            />
+          )}
+          {selectedTypes.shirt && shirts.length > 0 && (
+            <MerchandiseSection
+              type="Shirt"
+              items={shirts}
+              addToCart={addToCart}
+            />
+          )}
         </div>
       )}
     </div>
   );
 };
+
 
 export default MerchandiseList;
