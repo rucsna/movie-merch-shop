@@ -13,7 +13,6 @@ public class AppDbContext : DbContext
     public DbSet<Shirt> Shirts { get; set; }
     public DbSet<Poster> Posters { get; set; }
     public DbSet<Genre> Genres { get; set; }
-    public DbSet<MovieGenre> MovieGenres { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -53,5 +52,12 @@ public class AppDbContext : DbContext
         
 
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<MerchItem>()
+            .Property(u => u.Price)
+            .HasColumnType("decimal(18,2)");
+        modelBuilder.Entity<Order>()
+            .Property(u => u.OrderSum)
+            .HasColumnType("decimal(18,2)");
     }
 }

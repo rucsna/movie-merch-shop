@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using MovieMerchShop.Enum;
 using MovieMerchShop.Model;
 using MovieMerchShop.Service;
 using MovieMerchShop.Service.Authentication;
+using MovieMerchShop.Service.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +44,7 @@ app.UseCors(options =>
 
 AddRoles();
 AddAdmin();
-//CreateMerchandise();
+CreateMerchandise();
 
 app.MapControllers();
 
@@ -51,12 +53,15 @@ app.Run();
 
 void AddServices()
 {
-    builder.Services.AddControllers();
+    builder.Services.AddControllers().AddJsonOptions(options =>
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
     builder.Services.AddScoped<IOmdbApiProvider, OmdbApi>();
     builder.Services.AddScoped<IJsonProcessorOmdbApi, JsonProcessorOmdbApi>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
-    builder.Services.AddScoped<MovieService, MovieService>();
+    builder.Services.AddScoped<MovieService>();
+    builder.Services.AddScoped<IMerchItemRepository, MerchItemRepository>();
+    builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 }
 
 
@@ -97,9 +102,8 @@ void AddDbContext()
 {
 
     builder.Services.AddDbContext<AppDbContext>(options =>
-    {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    });
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped
+    );
     builder.Services.AddDbContext<UsersContext>(options =>
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -225,6 +229,7 @@ void CreateMerchandise()
                         Size = size,
                         Color = color
                     });
+                    context.SaveChanges();
                 }
             }
             //Mug
@@ -239,6 +244,7 @@ void CreateMerchandise()
                     Quantity = random.Next(5, 11),
                     Color = color
                 });
+                context.SaveChanges();
             }
         
             //Poster
@@ -256,6 +262,7 @@ void CreateMerchandise()
                         Size = size,
                         Material = material,
                     });
+                    context.SaveChanges();
                 }
             }
         }

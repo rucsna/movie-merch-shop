@@ -1,82 +1,140 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieMerchShop.Model;
-using MovieMerchShop.Service;
-using System.Linq;
-using MovieMerchShop.Data;
+using Microsoft.AspNetCore.Authorization;
+using MovieMerchShop.Contracts;
+using MovieMerchShop.Service.Repository;
 
 namespace MovieMerchShop.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
-
-public class OrderController: ControllerBase
+public class OrderController : ControllerBase
 {
-    private readonly AppDbContext _context;
-    
-    public OrderController(AppDbContext context)
+    private readonly IMerchItemRepository _itemRepository;
+    private readonly IOrderRepository _orderRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly ILogger<OrderController> _logger;
+
+    public OrderController(IMerchItemRepository itemRepository, IOrderRepository orderRepository, IUserRepository userRepository, ILogger<OrderController> logger)
     {
-        _context = context;
+        _itemRepository = itemRepository;
+        _orderRepository = orderRepository;
+        _userRepository = userRepository;
+        _logger = logger;
     }
-    
+
+    [Authorize(Roles = "Admin")]
     [HttpGet("GetAllOrders")]
-    public ActionResult<IEnumerable<Order>> GetAllOrders()
+    public async Task<IActionResult> GetAllOrders()
     {
-        List<Order> orders = _context.Orders.ToList();
-        return Ok(orders);
-    }
-    
-    [HttpGet("GetOrderById/{id}")]
-    public ActionResult<Order> GetOrderById(Guid id)
-    {
-        var order = _context.Orders.Find(id);
-
-        if (order == null)
+        try
         {
-            return NotFound();
+            var orders = await _orderRepository.GetAllAsync();
+            return Ok(orders);
         }
-
-        return Ok(order);
-    }
-    
-    [HttpGet("GetOrderByUserId/{userid}")]
-    public ActionResult<Order> GetOrderByUserId(Guid userid)
-    {
-        var orders = _context.Orders.Where(order => order.UserId == userid).ToList();
-
-        if (orders == null)
+        catch (Exception e)
         {
-            return NotFound(); 
+            _logger.LogError(e, "Error getting orders");
+            return BadRequest("Error getting orders");
         }
-
-        return Ok(orders);
     }
 
+    [Authorize(Roles = "Admin, User")]
+    [HttpGet("GetOrdersByUserId/{userId:guid}")]
+    public async Task<IActionResult> GetOrdersByUserId(Guid userId)
+    {
+        try
+        {
+            var orders = await _orderRepository.GetByUserIdAsync(userId);
+            if (!orders.Any())
+            {
+                return NotFound("This user doesn't have any orders");
+            }
+            return Ok(orders);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error getting orders by user id");
+            return BadRequest("Error getting orders");
+        }
+    }
+
+    [Authorize(Roles = "User")]
     [HttpPost("AddOrder")]
-    public ActionResult<Order> AddOrder(Order newOrder)
+    public async Task<IActionResult> AddOrderAsync([FromBody] OrderRequest request)
     {
-        if (newOrder == null)
+        var userInDb = await _userRepository.GetUserByIdAsync(request.UserId);
+        if (userInDb == null)
         {
-            return BadRequest(); 
+            _logger.LogError("No user found in the database with id {userId}", request.UserId);
+            return NotFound("No user found in the database");
+        }
+        
+        if (request.OrderedItemIds.Count == 0)
+        {
+            _logger.LogError("No items in the shopping cart");
+            return NoContent();
         }
 
-        _context.Orders.Add(newOrder);
-        _context.SaveChanges();
-        return Content(newOrder.Id.ToString());
-        // return CreatedAtAction(nameof(GetOrderById), new { id = newOrder.Id }, newOrder);
+        var orderedItems = new List<MerchItem>();
+
+        foreach (var itemId in request.OrderedItemIds)
+        {
+            var itemToAddOrder = await _itemRepository.GetItemByIdAsync(itemId);
+            if (itemToAddOrder == null)
+            {
+                _logger.LogError("No item found in the database with id {itemId}", itemId);
+                return NotFound("No item found in the database");
+            }
+            
+            _logger.LogInformation("Item found in the database");
+            orderedItems.Add(itemToAddOrder);
+
+            if (itemToAddOrder.Quantity < 1)
+            {
+                _logger.LogError("Item quantity in the database is 0");
+                return BadRequest($"Not enough item in the store");
+            }
+
+            itemToAddOrder.Quantity -= 1;
+            _logger.LogInformation("Item quantity successfully decreased. Quantity: {quantity}", itemToAddOrder.Quantity);
+
+            await _itemRepository.UpdateItemAsync(itemToAddOrder);
+        }
+
+        var newOrder = new Order
+        {
+            Id = Guid.NewGuid(),
+            UserId = request.UserId,
+            Items = orderedItems,
+            OrderSum = request.OrderSum,
+            OrderTime = DateTime.Now
+        };
+
+        await _orderRepository.CreateNewOrderAsync(newOrder);
+        return Ok(newOrder);
     }
-    
-    [HttpDelete("DeleteOrderById/{orderid}")]
-    public ActionResult DeleteOrderById(Guid orderid)
+
+    [Authorize(Roles = "User")]
+    [HttpDelete("DeleteOrderById/{orderId}")]
+    public async Task<IActionResult> DeleteOrderById(Guid orderId)
     {
-        var orderToDelete = _context.Orders.FirstOrDefault(order => order.Id == orderid);
-    
-        if (orderToDelete == null)
+        try
         {
-            return NotFound();
+            var orderToDelete = await _orderRepository.GetOrderByIdAsync(orderId);
+            if (orderToDelete == null)
+            {
+                _logger.LogError("No order found in database with id {orderId}", orderId);
+                return NotFound("No order found in database");
+            }
+
+            await _orderRepository.DeleteOrderAsync(orderToDelete);
+            return Ok($"Order with id {orderToDelete.Id} successfully deleted");
         }
-
-        _context.Orders.Remove(orderToDelete);
-        _context.SaveChanges();
-
-        return Ok($"Order with ID {orderid} has been deleted.");
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error with deleting order");
+            return BadRequest("Error with deleting order");
+        }
     }
 }
