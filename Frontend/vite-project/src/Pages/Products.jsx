@@ -30,8 +30,8 @@ const Products = () => {
       } else {
         console.log("else");
 
-        if (data.Search) {
-          setMovies(data.Search);
+        if (data.$values) {
+          setMovies(data.$values);
         } else {
           setMovies([]);
         }
