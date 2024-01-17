@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieMerchShop", "MovieMerchShop\MovieMerchShop.csproj", "{66835024-0373-400B-A154-90D3E713A484}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieMerch.IntegrationTests", "MovieMerch.IntegrationTests\MovieMerch.IntegrationTests.csproj", "{C6D2F889-C410-4288-9DF3-D2A4604A019F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{66835024-0373-400B-A154-90D3E713A484}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66835024-0373-400B-A154-90D3E713A484}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66835024-0373-400B-A154-90D3E713A484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6D2F889-C410-4288-9DF3-D2A4604A019F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6D2F889-C410-4288-9DF3-D2A4604A019F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6D2F889-C410-4288-9DF3-D2A4604A019F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6D2F889-C410-4288-9DF3-D2A4604A019F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
