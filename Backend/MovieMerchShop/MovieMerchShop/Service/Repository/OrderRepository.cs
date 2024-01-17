@@ -32,7 +32,7 @@ public class OrderRepository : IOrderRepository
         return await _dbContext.Orders.FindAsync(orderId);
     }
 
-    public async Task<IEnumerable<Order>> GetByUserIdAsync(Guid userId)
+    public async Task<IEnumerable<Order>> GetByUserIdAsync(string userId)
     {
         return await _dbContext.Orders.Where(order => order.UserId == userId).ToListAsync();
     }
