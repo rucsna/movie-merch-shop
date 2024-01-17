@@ -73,7 +73,7 @@ const Products = () => {
           <MovieCard
             title={selectedMovie.title}
             year={selectedMovie.year}
-            posterUrl={selectedMovie.imdbID}
+            imdbID={selectedMovie.imdbID}
           />
           <MerchandiseList movie={selectedMovie} />
         </div>
