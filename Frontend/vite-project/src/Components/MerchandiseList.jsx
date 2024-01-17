@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 
-
-  const MerchandiseList = ({ movie }) => {
+const MerchandiseList = ({ movie }) => {
   const [merchandise, setMerchandise] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState({
-    mug: false,
-    poster: false,
-    shirt: false,
+    mug: true,
+    poster: true,
+    shirt: true,
   });
+
+  const typeMappings = {
+    mug: "Mug",
+    poster: "Poster",
+    shirt: "Shirt",
+  };
 
   const getItemTypeValue = (type) => {
     switch (type) {
@@ -24,27 +29,6 @@ import React, { useState, useEffect } from "react";
     }
   };
 
-  const handleCheckboxChange = (type) => {
-    const typeMappings = {
-      mug: "Mug",
-      poster: "Poster",
-      shirt: "Shirt",
-    };
-
-    setSelectedTypes({
-      ...selectedTypes,
-      [type]: !selectedTypes[type],
-    });
-
-    const numericTypes = Object.keys(selectedTypes)
-      .filter((key) => selectedTypes[key])
-      .map((key) => getItemTypeValue(typeMappings[key]));
-
-    if (movie && movie.id) {
-      fetchMerchandise(movie.id, numericTypes);
-    }
-  };
-
   const fetchMerchandise = async (movieId, itemType) => {
     try {
       if (!movieId || !itemType) {
@@ -54,6 +38,7 @@ import React, { useState, useEffect } from "react";
       const response = await fetch(
         `/api/MerchItem/ItemsByMovie/${movieId}/${itemType}`
       );
+
       if (!response.ok) {
         throw new Error(
           `Failed to fetch merchandise. Status: ${response.status}`
@@ -61,7 +46,8 @@ import React, { useState, useEffect } from "react";
       }
 
       const data = await response.json();
-      setMerchandise(data);
+     
+      setMerchandise(data.$values)     
     } catch (error) {
       console.error("Error fetching merchandise:", error.message);
     } finally {
@@ -69,10 +55,50 @@ import React, { useState, useEffect } from "react";
     }
   };
 
-  useEffect(() => {
+  const handleCheckboxChange = (type) => {
+    setSelectedTypes((prevSelectedTypes) => ({
+      ...prevSelectedTypes,
+      [type]: !prevSelectedTypes[type],
+    }));
+  };
+
+  const fetchAllMerchandise = async () => {
     if (movie && movie.id) {
-      fetchMerchandise(movie.id, selectedTypes);
+      try {
+        setLoading(true);
+
+        const selectedTypeKeys = Object.keys(selectedTypes).filter(
+          (key) => selectedTypes[key]
+        );
+
+        const numericTypes = selectedTypeKeys.map((key) =>
+          getItemTypeValue(typeMappings[key])
+        );
+
+        const fetchPromises = numericTypes.map((type) =>
+          fetchMerchandise(movie.id, type)
+        );
+
+        const responses = await Promise.all(fetchPromises);
+
+        const responseDataPromises = responses.map((response) =>
+          response.json()
+        );
+        const responseData = await Promise.all(responseDataPromises);
+
+        const mergedMerchandise = responseData.flat();
+        console.log(mergedMerchandise)
+        setMerchandise(mergedMerchandise);
+      } catch (error) {
+        console.error("Error fetching merchandise:", error.message);
+      } finally {
+        setLoading(false);
+      }
     }
+  };
+
+  useEffect(() => {
+    fetchAllMerchandise();
   }, [movie, selectedTypes]);
 
   const addToCart = (item) => {
@@ -128,7 +154,8 @@ import React, { useState, useEffect } from "react";
         <div>
           {merchandise.map((item) => (
             <div key={item.id}>
-              <p>{item.name}</p>
+              <p>{item.color}</p>
+              
               <p>
                 Quantity: {item.quantity}, Price: ${item.price}
               </p>
