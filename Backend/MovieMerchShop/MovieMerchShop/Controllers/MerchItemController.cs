@@ -69,19 +69,45 @@ public class MerchItemController : ControllerBase
         }
     }
     
-    [HttpGet("ItemsByUser/{userId}")]
-    public IActionResult GetItemsByUser([Required]Guid userId)
+    [HttpGet("ItemsByMovie/{movieId}/{itemType}")]
+    public IActionResult GetItemsByMovie([Required] Guid movieId, [Required] ItemType itemType)
     {
         try
         {
-            var items = _dbContext.MerchItems.Select(item => item.MovieId == userId).ToList();
-            return Ok(items);
+            switch (itemType)
+            {
+                case ItemType.Mug:
+                    var mugList = _dbContext.MerchItems
+                        .Where(item => item.MovieId == movieId && item.Type == ItemType.Mug)
+                        .OfType<Mug>()
+                        .ToList();
+                    return Ok(mugList);
+
+                case ItemType.Shirt:
+                    var shirtList = _dbContext.MerchItems
+                        .Where(item => item.MovieId == movieId && item.Type == ItemType.Shirt)
+                        .OfType<Shirt>()
+                        .ToList();
+                    return Ok(shirtList);
+
+                case ItemType.Poster:
+                    var posterList = _dbContext.MerchItems
+                        .Where(item => item.MovieId == movieId && item.Type == ItemType.Poster)
+                        .OfType<Poster>()
+                        .ToList();
+                    return Ok(posterList);
+
+                default:
+                    return BadRequest("Invalid item type");
+            }
         }
         catch (Exception e)
         {
             return BadRequest(e);
         }
     }
+
+
     
     [HttpPost("Mug")]
     public IActionResult AddNewMug(Mug newMug)
