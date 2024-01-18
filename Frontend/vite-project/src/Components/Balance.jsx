@@ -21,6 +21,8 @@ const Balance = ({ email }) => {
       });
 
       if (!balanceResponse.ok) {
+        console.log(email);
+        console.log(amount);
         console.error(
           `Failed to update balance. Status: ${balanceResponse.status}`
         );
@@ -28,7 +30,7 @@ const Balance = ({ email }) => {
       }
 
       console.log("Balance updated successfully");
-       navigate("/profile");
+       navigate(`/profile/`);
     } catch (error) {
       console.error("Error during balance update:", error);
     }
