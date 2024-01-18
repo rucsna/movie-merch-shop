@@ -16,12 +16,14 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IUserRepository _userRepository;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IAuthService authService, IConfiguration configuration, IUserRepository userRepository)
+    public AuthController(IAuthService authService, IConfiguration configuration, IUserRepository userRepository, ILogger<AuthController> logger)
     {
         _authService = authService;
         _configuration = configuration;
         _userRepository = userRepository;
+        _logger = logger;
     }
     
     [HttpPost("Register")]
@@ -63,21 +65,58 @@ public class AuthController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("GetUserByEmail")]
-    public ActionResult<ApplicationUser> GetOrderByEmail()
+    [HttpGet("GetUserByEmail/{userEmail}")]
+    public async Task<ActionResult<ApplicationUser>> GetUserByEmail(string userEmail)
     {
-        var name = User.FindFirstValue(ClaimTypes.Name);
-        var email = User.FindFirstValue(ClaimTypes.Email);
-        Console.WriteLine(name);
-
-        var respObject = new JsonObject
+        try
         {
-            UserName = name,
-            Email = email
-        };
-        var response = JsonSerializer.Serialize(respObject);
+            var user = await _userRepository.GetUserByEmailAsync(userEmail);
+            if (user == null)
+            {
+                return NotFound("No user found in database");
+            }
+
+            return Ok(user);
+        }
+        catch (Exception e)
+        {
+            return BadRequest("Error with finding user by email");
+        }
+        // var name = User.FindFirstValue(ClaimTypes.Name);
+        // var email = User.FindFirstValue(ClaimTypes.Email);
+        // Console.WriteLine(name);
+        //
+        // var respObject = new JsonObject
+        // {
+        //     UserName = name,
+        //     Email = email
+        // };
+        // var response = JsonSerializer.Serialize(respObject);
         
-        return Ok(response);
+        //return Ok(response);
+    }
+    
+    [HttpDelete("DeleteTestUser")]
+    public async Task<IActionResult> DeleteUserByEmailAsync()
+    {
+        try
+        {
+            var userToDelete = await _userRepository.GetUserByEmailAsync("test3@test.com");
+            Console.WriteLine($"USER TO DELETE EMAIL {userToDelete.Email}");
+            if (userToDelete == null)
+            {
+                _logger.LogError("Couldn't find test user in the database");
+                return NotFound("No test user found in database");
+            }
+
+            await _userRepository.DeleteUserAsync(userToDelete);
+            return Ok("Test user successfully deleted");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error with deleting test user, {exception}", e);
+            return BadRequest("Error with deleting test user");
+        }
     }
 
     [Authorize(Roles="User, Admin")]

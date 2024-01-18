@@ -7,6 +7,6 @@ public interface IOrderRepository
     Task<Order> CreateNewOrderAsync(Order newOrder);
     Task<IEnumerable<Order>> GetAllAsync();
     Task<Order?> GetOrderByIdAsync(Guid orderId);
-    Task<IEnumerable<Order>> GetByUserIdAsync(Guid userId);
+    Task<IEnumerable<Order>> GetByUserIdAsync(string userId);
     Task DeleteOrderAsync(Order orderToDelete);
 }

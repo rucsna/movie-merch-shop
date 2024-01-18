@@ -40,8 +40,8 @@ public class OrderController : ControllerBase
     }
 
     [Authorize(Roles = "Admin, User")]
-    [HttpGet("GetOrdersByUserId/{userId:guid}")]
-    public async Task<IActionResult> GetOrdersByUserId(Guid userId)
+    [HttpGet("GetOrdersByUserId/{userId}")]
+    public async Task<IActionResult> GetOrdersByUserId(string userId)
     {
         try
         {
@@ -63,10 +63,10 @@ public class OrderController : ControllerBase
     [HttpPost("AddOrder")]
     public async Task<IActionResult> AddOrderAsync([FromBody] OrderRequest request)
     {
-        var userInDb = await _userRepository.GetUserByIdAsync(request.UserId);
+        var userInDb = await _userRepository.GetUserByEmailAsync(request.UserEmail);
         if (userInDb == null)
         {
-            _logger.LogError("No user found in the database with id {userId}", request.UserId);
+            _logger.LogError("No user found in the database with email address {userEmail}", request.UserEmail);
             return NotFound("No user found in the database");
         }
         
@@ -105,7 +105,7 @@ public class OrderController : ControllerBase
         var newOrder = new Order
         {
             Id = Guid.NewGuid(),
-            UserId = request.UserId,
+            UserId = userInDb.Id,
             Items = orderedItems,
             OrderSum = request.OrderSum,
             OrderTime = DateTime.Now
@@ -115,8 +115,8 @@ public class OrderController : ControllerBase
         return Ok(newOrder);
     }
 
-    [Authorize(Roles = "User")]
-    [HttpDelete("DeleteOrderById/{orderId}")]
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("DeleteOrderById/{orderId:guid}")]
     public async Task<IActionResult> DeleteOrderById(Guid orderId)
     {
         try
