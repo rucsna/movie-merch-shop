@@ -97,9 +97,10 @@ public class AuthController : ControllerBase
     }
     
     [HttpPatch("UpBalance")]
-    public async Task<IActionResult> UpBalanceAsync( string email,decimal balance)
+    public async Task<IActionResult> UpBalanceAsync([FromBody] UpBalanceRequest request)
     {
-        var success = await _userRepository.UpdateBalanceAsync(email, balance);
+        Console.WriteLine(request.Email);
+        var success = await _userRepository.UpdateBalanceAsync(request.Email, request.Balance);
 
         if (success)
         {
