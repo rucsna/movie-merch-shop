@@ -5,7 +5,7 @@ const Cart = () => {
   const [sum, setSum] = useState(0);
   const [order, setOrder] = useState([]);
   const [groupedCart, setGroupedCart] = useState({});
-  const [merchandise, setMerchandise] = useState([]); // New state for merchandise
+  const [merchandise, setMerchandise] = useState([]);
 
   const getCurrentUserId = () => {
     const token = localStorage.getItem("accessToken");
@@ -42,7 +42,7 @@ const Cart = () => {
     }
   };
 
-  // Function to fetch merchandise for a specific movie
+  
   const fetchMerchandise = async (movieId) => {
     try {
       const response = await fetch(`/api/MerchItem/ItemsByMovie/${movieId}`);
@@ -144,7 +144,7 @@ const Cart = () => {
       <ul>
         {merchandise.map((item) => (
           <li key={item.id}>
-            {/* Display merchandise details */}
+          
             {item.type} - ${item.price}
           </li>
         ))}
