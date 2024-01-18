@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Balance from "../Components/Balance";
+import { useParams } from "react-router-dom";
 const Profile = () => {
   const [userInfo, setUserInfo] = useState(null);
-  const [upToBalance,setUpToBalance] = useState(false);
-
+  const {email} = useParams()
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await fetch("/api/Auth/GetUserByEmail", {
+        const response = await fetch(`/api/Auth/GetUserByEmail/${email}`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`, 
@@ -29,10 +28,6 @@ const Profile = () => {
     fetchUserInfo();
   }, []);
 
-    const handleBalanceClick = () => {
-     setUpToBalance(!upToBalance)
-    };
-
   if (!userInfo) {
     return <p>Loading...</p>;
   }
@@ -42,12 +37,6 @@ const Profile = () => {
       <h2>Profile</h2>
       <p>User name: {userInfo.UserName}</p>
       <p>Email: {userInfo.Email}</p>
-      <p>Balance: {userInfo.Balance}</p>
-      <button onClick={handleBalanceClick}>Top up balance!</button>
-      {upToBalance && <div>
-        <Balance balance={userInfo.Balance} />
-      </div>}
-      <p></p>
     </div>
   );
 };

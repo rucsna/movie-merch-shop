@@ -22,6 +22,7 @@ const Login = () => {
         },
         body: JSON.stringify(loginData),
       });
+      console.log(loginData);
 
       if (!response.ok) {
         console.error("Login failed:", response.statusText);
@@ -34,7 +35,7 @@ const Login = () => {
       console.log("User Token:", data.token);
 
       localStorage.setItem("accessToken", data.token);
-      navigate("/profile");
+      navigate(`/profile/${data.email}`);
     } catch (error) {
       console.error("Error during login:", error);
     }
