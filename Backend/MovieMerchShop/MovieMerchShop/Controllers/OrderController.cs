@@ -110,8 +110,9 @@ public class OrderController : ControllerBase
             OrderSum = request.OrderSum,
             OrderTime = DateTime.Now
         };
-
+        decimal minusSum = request.OrderSum * (-1);
         await _orderRepository.CreateNewOrderAsync(newOrder);
+        await _userRepository.UpdateBalanceAsync(request.UserEmail, minusSum);
         return Ok(newOrder);
     }
 
