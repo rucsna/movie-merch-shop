@@ -35,7 +35,8 @@ const Login = () => {
       console.log("User Token:", data.token);
 
       localStorage.setItem("accessToken", data.token);
-      navigate(`/profile/${data.email}`);
+      localStorage.setItem("userEmail", data.email)
+      navigate(`/profile`);
     } catch (error) {
       console.error("Error during login:", error);
     }
