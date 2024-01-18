@@ -115,8 +115,8 @@ public class OrderController : ControllerBase
         return Ok(newOrder);
     }
 
-    [Authorize(Roles = "User")]
-    [HttpDelete("DeleteOrderById/{orderId}")]
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("DeleteOrderById/{orderId:guid}")]
     public async Task<IActionResult> DeleteOrderById(Guid orderId)
     {
         try
