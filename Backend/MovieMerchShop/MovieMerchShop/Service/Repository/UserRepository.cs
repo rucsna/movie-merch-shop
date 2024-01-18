@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MovieMerchShop.Data;
 using MovieMerchShop.Model;
 
@@ -14,7 +15,7 @@ public class UserRepository : IUserRepository
 
     public async Task<ApplicationUser?> GetUserByEmailAsync(string email)
     {
-        return await _usersContext.Users.FindAsync(email);
+        return await _usersContext.Users.FirstOrDefaultAsync(user => user.Email == email);
     }
 
     public async Task DeleteUserAsync(ApplicationUser userToDelete)
