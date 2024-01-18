@@ -1,20 +1,15 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+WORKDIR /App
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /src
+# Copy everything
+COPY . ./
+# Restore as distinct layers
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out
 
-# Copy the project file and restore dependencies
-COPY ./MovieMerchShop.csproj .
-RUN dotnet restore "./MovieMerchShop.csproj"
-
-# Copy the entire application code
-COPY . .
-RUN dotnet build "MovieMerchShop.csproj" -c Release -o /app/build
-
-FROM base AS final
-WORKDIR /app
-COPY --from=build /app/build .
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+WORKDIR /App
+COPY --from=build-env /App/out .
 ENTRYPOINT ["dotnet", "MovieMerchShop.dll"]
