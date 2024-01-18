@@ -161,13 +161,37 @@ button:focus-visible {
 
 .merchandise-container {
   display: flex;
-  flex-wrap: wrap;
   gap: 20px;
+  justify-content: space-around; /* Change to space-around */
+  flex-wrap: wrap;
 }
 
+/* Merchandise card styles */
 .merchandise-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 1px solid #ccc;
   padding: 16px;
   width: 200px;
-  margin-bottom: 20px;
+  height: 300px; /* Set a fixed height */
+  box-sizing: border-box; /* Include padding in the height */
+  margin: 10px; /* Add margin for spacing */
+}
+
+.merchandise-card img {
+  width: 100%; /* Make the image fill the container */
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.merchandise-card .title {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.merchandise-card .price {
+  font-size: 14px;
+  color: #777;
 }
