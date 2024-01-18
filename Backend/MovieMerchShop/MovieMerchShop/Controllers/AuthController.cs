@@ -96,6 +96,21 @@ public class AuthController : ControllerBase
         //return Ok(response);
     }
     
+    [HttpPatch("UpBalance")]
+    public async Task<IActionResult> UpBalanceAsync( string email,decimal balance)
+    {
+        var success = await _userRepository.UpdateBalanceAsync(email, balance);
+
+        if (success)
+        {
+            return Ok("Balance updated successfully");
+        }
+        else
+        {
+            return BadRequest("Failed to update balance");
+        }
+    }
+    
     [HttpDelete("DeleteTestUser")]
     public async Task<IActionResult> DeleteUserByEmailAsync()
     {
