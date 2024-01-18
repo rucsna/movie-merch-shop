@@ -1,11 +1,7 @@
 using System.Net;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using MovieMerchShop.Contracts;
-using MovieMerchShop.Data;
-using MovieMerchShop.Model;
 using MovieMerchShop.Service.Authentication;
-using MovieMerchShop.Service.Repository;
 using Newtonsoft.Json;
 
 namespace MovieMerch.IntegrationTests;
@@ -14,7 +10,6 @@ public class AuthenticationTest : IDisposable
 {
     private readonly MovieMerchFactory _factory;
     private readonly HttpClient _client;
-    //private readonly IUserRepository _userRepository;
 
     public AuthenticationTest()
     {
@@ -52,22 +47,29 @@ public class AuthenticationTest : IDisposable
         Assert.Equal(HttpStatusCode.BadRequest, loginResponse.StatusCode);
     }
 
-    // [Fact]
-    // public async Task Test_Registration_ReturnsOk_WhenSuccessfulRegistration()
-    // {
-    //     // Registration Attempt
-    //     var registrationRequest = new RegistrationRequest("test1@test.com", "tester1", "testPassword",
-    //         new DateTime(2000, 12, 12), "testAddress");
-    //     var registrationResponse = await _client.PostAsync("api/Auth/Register",
-    //         new StringContent(JsonConvert.SerializeObject(registrationRequest), Encoding.UTF8, "application/json"));
-    //
-    //     // Assert
-    //     Assert.Equal(HttpStatusCode.Created, registrationResponse.StatusCode);
-    //
-    //     //IUserRepository userRepository = new UserRepository(new UsersContext(new DbContextOptions<UsersContext>()));
-    //     var userToDelete = await userRepository.GetUserByEmailAsync(registrationRequest.Email);
-    //     await userRepository.DeleteUserAsync(userToDelete);
-    // }
+    [Fact]
+    public async Task Test_Registration_ReturnsOk_WhenSuccessfulRegistration()
+    {
+        // Registration Attempt
+        var registrationRequest = new RegistrationRequest("test3@test.com", "tester3", "testPassword",
+            new DateTime(2000, 12, 12), "tester3Address");
+
+        var registrationResponse = await _client.PostAsync("api/Auth/Register",
+            new StringContent(JsonConvert.SerializeObject(registrationRequest), Encoding.UTF8, "application/json"));
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, registrationResponse.StatusCode);
+        
+        // Delete test user from database
+        var deleteResponse = await _client.DeleteAsync("api/Auth/DeleteTestUser");
+        Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task Test_RegistrationFails_WhenInputIsInValid()
+    {
+        
+    }
 
 
     void IDisposable.Dispose()
