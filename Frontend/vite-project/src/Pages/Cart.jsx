@@ -7,28 +7,10 @@ const Cart = () => {
   const [groupedCart, setGroupedCart] = useState({});
   const [merchandise, setMerchandise] = useState([]);
 
-  const getCurrentUserId = () => {
-    const token = localStorage.getItem("accessToken");
-    console.log(token);
-    if (token) {
-      const tokenParts = token.split(".");
-      if (tokenParts.length === 3) {
-        const payload = atob(tokenParts[1]);
-        const decodedPayload = JSON.parse(payload);
-        console.log(
-          decodedPayload[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-          ]
-        );
-        return decodedPayload[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
-      }
-    }
-  };
-
-  const userId = getCurrentUserId();
-
+  
+    const userEmail = localStorage.getItem("userEmail");
+    console.log(userEmail);
+  
   const getItemName = (type) => {
     switch (type) {
       case "0":
@@ -93,9 +75,10 @@ const Cart = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         body: JSON.stringify({
-          userId: userId,
+          userEmail: userEmail,
           orderedItemIds: orderData.map((item) => item.id),
           orderSum: sum,
         }),
