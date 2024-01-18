@@ -7,6 +7,7 @@ const Registration = () => {
   const [password, setPassword] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [address, setAddress] = useState("");
+  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleRegistration = async (e) => {
@@ -39,6 +40,13 @@ const Registration = () => {
       console.log("User Email:", data.email);
       console.log("User Token:", data.token);
 
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setAddress("");
+      setBirthdate("");
+
+      setIsRegistrationSuccess(true);
   
   
     } catch (error) {
@@ -97,6 +105,9 @@ const Registration = () => {
         </label>
         <button type="submit">Register</button>
       </form>
+      {isRegistrationSuccess ? (
+        <h4>Successfull registration! Please, login</h4>
+      ) : null}
     </div>
   );
 };
