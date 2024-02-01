@@ -1,9 +1,14 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using MovieMerchShop.Contracts;
+using MovieMerchShop.Data;
 using MovieMerchShop.Service.Authentication;
+using MovieMerchShop.Service.Repository;
 using Newtonsoft.Json;
+using Xunit.Abstractions;
 
 namespace MovieMerch.IntegrationTests;
 
@@ -11,9 +16,11 @@ public class AuthenticationTest : IDisposable
 {
     private readonly MovieMerchFactory _factory;
     private readonly HttpClient _client;
+    private ITestOutputHelper _output;
 
-    public AuthenticationTest()
+    public AuthenticationTest(ITestOutputHelper output)
     {
+        _output = output;
         _factory = new MovieMerchFactory();
         _client = _factory.CreateClient();
     }
@@ -41,6 +48,7 @@ public class AuthenticationTest : IDisposable
     {
         // Invalid Login Attempt
         var loginRequest = new AuthRequest("invalidUserName@email.com", "invalidPassword");
+        
         var loginResponse = await _client.PostAsync("api/Auth/Login",
             new StringContent(JsonConvert.SerializeObject(loginRequest), Encoding.UTF8, "application/json"));
         
@@ -60,10 +68,6 @@ public class AuthenticationTest : IDisposable
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, registrationResponse.StatusCode);
-        
-        // Delete test user from database
-        var deleteResponse = await _client.DeleteAsync("api/Auth/DeleteTestUser");
-        Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
     }
 
     [Fact]
@@ -83,10 +87,14 @@ public class AuthenticationTest : IDisposable
     [Fact]
     public async Task Test_RegistrationFails_WhenUserNameOrEmail_AlreadyExists()
     {
+        //var existingUser = await _client.GetAsync($"/api/Auth/GetUserByEmail/user2@gmail.com");
         // Invalid Registration Attempt
-        var registrationRequest = new RegistrationRequest("user2@gmail.com", "tester", "password", new DateTime(2000, 12, 12),
+        var registrationRequest = new RegistrationRequest(
+            "user2@gmail.com", "tester", "password", new DateTime(2000, 12, 12),
             "testerAddress");
-        var registrationResponse = await _client.PostAsync("api/Auth/Register", new StringContent(JsonConvert.SerializeObject(registrationRequest), Encoding.UTF8, "application/json"));
+        var registrationResponse = await _client.PostAsync("api/Auth/Register", 
+            new StringContent(JsonConvert.SerializeObject(registrationRequest), 
+                Encoding.UTF8, "application/json"));
         var responseContent = await registrationResponse.Content.ReadAsStringAsync();
         
         // Assert
