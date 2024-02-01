@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data.Entity;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MovieMerchShop.Data;
@@ -33,35 +34,26 @@ namespace MovieMerchShop.Controllers
             _context = context;
         }
 
-        // [HttpGet("search")]
-        // public async Task<IActionResult> SearchMovieAsync([FromQuery] string title)
-        // {
-        //     if (string.IsNullOrEmpty(title))
-        //     {
-        //         return BadRequest("Title is a required parameter.");
-        //     }
-        //
-        //     string apiUrl = $"http://www.omdbapi.com/?t={title}";
-        //
-        //     using (var httpClient = _httpClientFactory.CreateClient())
-        //     {
-        //
-        //         httpClient.DefaultRequestHeaders.Add("apikey", _omdbApiKey);
-        //
-        //         var response = await httpClient.GetAsync(apiUrl);
-        //
-        //         if (response.IsSuccessStatusCode)
-        //         {
-        //             var content = await response.Content.ReadAsStringAsync();
-        //             return Ok(content);
-        //         }
-        //         else
-        //         {
-        //             return StatusCode((int)response.StatusCode, $"Error: {response.ReasonPhrase}");
-        //         }
-        //     }
-        // }
+        [HttpGet("getMoviesToLandingPage")]
+        public IActionResult GetMoviesToLandingPage()
+        {
+            try
+            {
+                var items = _context.Movies.ToList();
 
+                // Shuffle the list so every time 20 random movie would be chosen
+                var random = new Random();
+                var shuffledList = items.OrderBy(x => random.Next()).ToList();
+                
+                var shortList = shuffledList.Take(20).ToList();
+                return Ok(shortList);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Error getting movies");
+            }
+        }
        
         
         [HttpGet("filldata")]

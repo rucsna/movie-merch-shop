@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Balance from "../Components/Balance"
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [upToBalance, setUpToBalance] = useState(false);
-  
-  
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       const email = localStorage.getItem("userEmail");
@@ -31,7 +31,7 @@ const Profile = () => {
       } catch (error) {
         console.error("Error during user information retrieval:", error);
       }
-        await fetchUserInfo();
+      await fetchUserInfo();
     };
 
     fetchUserInfo();
@@ -39,23 +39,20 @@ const Profile = () => {
 
   if (!userInfo) {
     return <p>Loading...</p>;
-  }
+  };
 
-    const handleBalanceClick = () => {
-     setUpToBalance(!upToBalance)
-    };
+  const handleBalanceClick = () => {
+    setUpToBalance(!upToBalance)
+  };
 
-  if (!userInfo) {
-    return <p>Loading...</p>;
-
-     
-  }
+  const handleLogOut = () => {
+    localStorage.clear();
+    navigate("/");
+  };
 
   return (
     <div className="profile-container">
-      <h2>Profile</h2>
-      <p>User name: {userInfo.userName}</p>
-      <p>Email: {userInfo.email}</p>
+      <p>Welcome, {userInfo.userName}</p>
       <p>Balance: {userInfo.balance}</p>
       <button onClick={handleBalanceClick}>Top up balance!</button>
       {upToBalance && (
@@ -64,6 +61,7 @@ const Profile = () => {
         </div>
       )}
       <p></p>
+      <button onClick={handleLogOut}>Log out</button>
     </div>
   );
 };

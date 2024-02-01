@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Profile from "./Profile";
 
 const Login = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!accessToken);
+  }, [])
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -44,7 +52,14 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <h2>Login</h2>
+      {isLoggedIn ? (
+        <div>
+          <h3>You are already logged in.</h3>
+          <Profile />
+        </div>
+      ) : (
+        <div>
+      <h3>Please, log in!</h3>
       <form onSubmit={handleLogin}>
         <label>
           Email:
@@ -66,6 +81,8 @@ const Login = () => {
         </label>
         <button type="submit">Login</button>
       </form>
+      </div>
+      )}
     </div>
   );
 };

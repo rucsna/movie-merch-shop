@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import MovieCard from "../Components/MovieCard";
 import MerchandiseList from "../Components/MerchandiseList";
 
@@ -7,7 +6,32 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await fetch("/api/Movie/getMoviesToLandingPage");
+        const data = await response.json();
+
+        if (data.length > 0) {
+          setMovies(data);
+        } else {
+          console.log("else");
+
+          if (data.$values) {
+            setMovies(data.$values);
+          } else {
+            setMovies([]);
+          }
+        }
+      }
+      catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
+    fetchMovies();
+  }, [selectedMovie === null]);
+
 
   const handleSearchChange = async (e) => {
     const term = e.target.value;

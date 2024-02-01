@@ -5,13 +5,21 @@ const Registration = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordMatch, setPasswordMatch] = useState(true);
   const [birthdate, setBirthdate] = useState("");
   const [address, setAddress] = useState("");
-  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleRegistration = async (e) => {
     e.preventDefault();
+
+    // if(password !== confirmPassword){
+    //   console.error("Passwrods do not match");
+    //   setPasswordMatch(false);
+    //   return;
+    // }
+    // setPasswordMatch(true);
 
     const registrationData = {
       UserName: username,
@@ -40,26 +48,20 @@ const Registration = () => {
       console.log("User Email:", data.email);
       console.log("User Token:", data.token);
 
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setAddress("");
-      setBirthdate("");
-
-      setIsRegistrationSuccess(true);
-  
+      navigate(`/login`);
   
     } catch (error) {
       console.error("Error during registration:", error);
     }
   };
 
+  console.log("password match", passwordMatch);
   return (
     <div className="registration-container">
-      <h2>Registration</h2>
+      <h4>Please, enter your data for registering to MovieMerchShop</h4>
       <form onSubmit={handleRegistration}>
         <label>
-          Username:
+          Select a username:
           <input
             type="text"
             value={username}
@@ -68,7 +70,7 @@ const Registration = () => {
           />
         </label>
         <label>
-          Email:
+          Your email address:
           <input
             type="email"
             value={email}
@@ -77,7 +79,7 @@ const Registration = () => {
           />
         </label>
         <label>
-          Password:
+          Your password:
           <input
             type="password"
             value={password}
@@ -85,8 +87,17 @@ const Registration = () => {
             required
           />
         </label>
+        {/* <label>
+          Your password again:
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </label> */}
         <label>
-          BirthDate:
+          Date of birth:
           <input
             type="date"
             value={birthdate}
@@ -105,9 +116,6 @@ const Registration = () => {
         </label>
         <button type="submit">Register</button>
       </form>
-      {isRegistrationSuccess ? (
-        <h4>Successfull registration! Please, login</h4>
-      ) : null}
     </div>
   );
 };
