@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting.Internal;
 using MovieMerchShop.Data;
 using MovieMerchShop.Model;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace MovieMerch.IntegrationTests;
 
@@ -34,21 +36,25 @@ public class MovieMerchFactory : WebApplicationFactory<Program>
                 services.Remove(appDbContextDescriptor);
             }
 
-            services.AddDbContext<UsersContext>(options => { options.UseInMemoryDatabase("TestDb"); });
-            services.AddDbContext<AppDbContext>(options => { options.UseInMemoryDatabase("TestDb"); });
+            services.AddDbContext<UsersContext>(options => options.UseInMemoryDatabase("TestDb"));
+            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("TestDb"));
+
+            services.AddEntityFrameworkInMemoryDatabase()
+                .AddDbContext<UsersContext>(options => options.UseInMemoryDatabase("TestDb"));
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<UsersContext>();
 
             var sp = services.BuildServiceProvider();
             using (var scope = sp.CreateScope())
             {
                 var scopedService = scope.ServiceProvider;
                 var usersContext = scopedService.GetRequiredService<UsersContext>();
-
+                
                 usersContext.Database.EnsureDeleted();
                 usersContext.Database.EnsureCreated();
 
                 try
                 {
-                    Console.WriteLine("seeding...");
                     usersContext.Users.Add(new ApplicationUser
                     {
                         Email = "user2@gmail.com",
