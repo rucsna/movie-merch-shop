@@ -64,7 +64,7 @@ public class AuthController : ControllerBase
         return Ok(new AuthResponse(result.Email, result.UserName, result.Token));
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("GetUserByEmail/{userEmail}")]
     public async Task<ActionResult<ApplicationUser>> GetUserByEmail(string userEmail)
     {
@@ -82,18 +82,6 @@ public class AuthController : ControllerBase
         {
             return BadRequest("Error with finding user by email");
         }
-        // var name = User.FindFirstValue(ClaimTypes.Name);
-        // var email = User.FindFirstValue(ClaimTypes.Email);
-        // Console.WriteLine(name);
-        //
-        // var respObject = new JsonObject
-        // {
-        //     UserName = name,
-        //     Email = email
-        // };
-        // var response = JsonSerializer.Serialize(respObject);
-        
-        //return Ok(response);
     }
     
     [HttpDelete("DeleteTestUser")]
